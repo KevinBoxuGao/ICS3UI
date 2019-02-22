@@ -1,4 +1,5 @@
 from math import *
+
 def slope(x1, y1, x2, y2):
     if x1 == x2:
         return "undefined"
@@ -6,7 +7,7 @@ def slope(x1, y1, x2, y2):
         return (y2 - y1)/(x2 - x1)
 
 while True:
-    orientation = input("enter either clockwise or counterclockwise")
+    orientation = input("enter if your points will be in clockwise or counterclockwise order"))
     x1 = int(input("Enter x1: "))
     y1 = int(input("Enter y1: "))
     x2 = int(input("Enter x2: "))
@@ -24,42 +25,53 @@ while True:
     diagonalAC = sqrt((x3-x1)**2+(y3-y1)**2)
     diagonalBD = sqrt((x4-x2)**2+(y4-y2)**2)
 
-    #check for parallel sides
     parallelSides = 0
-
-    #AB and CD
+    #Check AB and CD
     if slope(x1,y1,x2,y2) == slope(x3,y3,x4,y4):
         parallelSides = parallelSides + 1
-    #AD and CC
+        
+    #Check AD and BC
     if slope(x1,y1,x4,y4) == slope(x2,y2,x3,y3):
         parallelSides = parallelSides + 1
 
     #driver
-    if parallelSides == 2:
+    if parallelSides == 2:        
         if diagonalAC == diagonalBD:
             if lengthAB == lengthBC == lengthCD == lengthDA:
-                if slope(x1,y1,x4,y4) == 0:
+                if slope(x1,y1,x4,y4) == 0 or slope(x3,y3,x4,y4) == 0: 
                     print("horizontal square")
                 else:
                     print("tilted square")
             else:
-                if slope(x1,y1,x4,y4) == 0:
+                if slope(x1,y1,x4,y4) == 0 or slope(x3,y3,x4,y4) == 0:
                     print("horizontal rectangle")
                 else:
                     print("tilted rectangle")
+
         else:
             if lengthAB == lengthBC == lengthCD == lengthDA:
                 print("rhombus")
             else:
-                if slope(x1,y1,x4,y4) == 0:
+                if slope(x1,y1,x4,y4) == 0 or slope(x3,y3,x4,y4) == 0: 
                     print("horizontal parallelogram")
-                elif slope(x1,y1,x4,y4) == "undefined":
-                    print("vertical parallelogram")
                 else:
                     print("tilted parallelogram")
-
+                    
     elif parallelSides == 1:
-        print("trapezoid")
+
+
+        if slope(x1,y1,x2,y2) == 0 and slope(x3,y3,x4,y4) == 0:
+            print("horizontal trapezoid")
+        elif slope(x1,y1,x3,y3) == 0 and slope(x2,y2,x4,y4) == 0:
+            print("horizontal trapezoid")
+
+        elif slope(x1,y1,x2,y2) == "undefined" or slope(x3,y3,x4,y4) == "undefined":
+            print("vertical trapezoid")
+        elif slope(x1,y1,x2,y2) == "undefined" or slope(x3,y3,x4,y4) == "undefined":
+            print("vertical trapezoid")
+
+        else:
+            print("tilted trapezoid")       
         
     else:
         if lengthAB == lengthDA and lengthCD == lengthBC:
@@ -68,5 +80,3 @@ while True:
             print("kite")
         else:
             print("quadrilateral")
-
-
