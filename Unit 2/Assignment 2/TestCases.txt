@@ -1,0 +1,93 @@
+Case 1: Square counter 
+clockwise
+8
+3
+7
+8
+2
+7
+3
+2
+counterclockwise
+8
+3
+3
+2
+2
+7
+7
+8
+negative numbers
+-7
+3
+4
+-3
+-2
+-14
+-13
+-8
+Case 2: Rectangle 
+-4
+5
+-4
+2
+3
+2
+3
+5
+clockwise
+-5
+-2
+5
+0
+6
+-5
+-4
+-7
+Case 3: Rhombus
+-3
+1
+1
+4
+5
+1
+1
+-2
+
+Case 4: Parrallelogram
+0
+0
+7
+5
+16
+5
+9
+0
+
+Case 5: Trapezoid
+6
+7
+16
+31
+34
+31
+50
+7
+Case 6: Kite
+-6
+0
+0
+8
+10
+0
+0
+-8
+Case 7: Quadrilateral
+-3
+-4
+2
+5
+6
+5
+3
+2
