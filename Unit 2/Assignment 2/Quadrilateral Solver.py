@@ -85,5 +85,5 @@ while True:
             elif lengthDA == lengthCD and lengthAB == lengthBC:
                 print("kite")
             else:
-    print("quadrilateral")
+    print("weird quadrilateral")
 
