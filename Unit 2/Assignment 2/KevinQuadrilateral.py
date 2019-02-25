@@ -1,3 +1,8 @@
+################################################################################
+#Programmer: Kevin Gao                                                         #          
+#Project: Unit 2 Assignment 2: Quadrilateral Solver                            #
+#Class: ICS3UI                                                                 #              
+################################################################################
 from math import *
 
 def slope(x1, y1, x2, y2):
@@ -41,7 +46,7 @@ while True:
         if slope(x1,y1,x4,y4) == slope(x2,y2,x3,y3):
             parallelSides = parallelSides + 1
 
-        #driver
+        #First check for parallel sides to classify shapes and then check for shape specific characteristics
         if parallelSides == 2:        
             if diagonalAC == diagonalBD:
                 if lengthAB == lengthBC == lengthCD == lengthDA:
