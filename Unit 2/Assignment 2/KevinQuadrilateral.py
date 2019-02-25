@@ -52,12 +52,12 @@ while True:
             parallelSides = parallelSides + 1
 
         #First check for parallel sides to classify shapes
-        if parallelSides == 2:        
-            if diagonalAC == diagonalBD: 
+        if parallelSides == 2: #Square, Rectangle, or rhombus    
+            if diagonalAC == diagonalBD: #Squre or Rectangle
                 if lengthAB == lengthBC == lengthCD == lengthDA:
                     if slope(x1,y1,x4,y4) == 0 or slope(x1,y1,x4,y4) == "undefined": #checks if one side is vertical or horizontal to find if square is horizontal to x axis 
                         print("horizontal square")
-                    else:
+                    else
                         print("tilted square")
                 else:
                     if slope(x1,y1,x4,y4) == 0 or slope(x1,y1,x4,y4) == "undefined": #same as above
@@ -77,7 +77,7 @@ while True:
                     else:
                         print("tilted parallelogram")
                         
-        elif parallelSides == 1:
+        elif parallelSides == 1: #Trapezoid
             #check for both possibilities for pair of parallel lines that are horizontal
             if slope(x1,y1,x2,y2) == 0 and slope(x3,y3,x4,y4) == 0: #same as above 
                 print("horizontal trapezoid")
@@ -93,7 +93,8 @@ while True:
             else:
                 print("tilted trapezoid")       
             
-        else:
+        else: #Kite or quadrilateral
+            #check for two pairs of adjacent sides are equal
             if lengthAB == lengthDA and lengthCD == lengthBC:
                 print("kite")
             elif lengthDA == lengthCD and lengthAB == lengthBC:
