@@ -73,6 +73,15 @@ Case 5: Trapezoid
 31
 50
 7
+vertical trapezoid
+-2
+4
+5
+5
+5
+-5
+-2
+3
 Case 6: Kite
 -6
 0
