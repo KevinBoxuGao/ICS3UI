@@ -12,23 +12,28 @@ def slope(x1, y1, x2, y2):
         return (y2 - y1)/(x2 - x1)
 
 while True:
-    x1 = int(input("Enter x1: "))
+    #point A
+    x1 = int(input("Enter x1: ")) 
     y1 = int(input("Enter y1: "))
-    x2 = int(input("Enter x2: "))
+    #point B
+    x2 = int(input("Enter x2: ")) 
     y2 = int(input("Enter y2: "))
-    x3 = int(input("Enter x3: "))
+    #point C
+    x3 = int(input("Enter x3: ")) 
     y3 = int(input("Enter y3: "))
-    x4 = int(input("Enter x4: "))
+    #point D
+    x4 = int(input("Enter x4: ")) 
     y4 = int(input("Enter y4: "))
-    #check if two points are the same
+
+    #create an list of the points and uses it to create a list of unique points
     points = [[x1,y1],[x2,y2],[x3,y3],[x4,y4]]
     uniquepoints = []
     for i in points:
         if i not in uniquepoints:
             uniquepoints.append(i)
 
-    if len(uniquepoints) < 4:
-        print("o no two points are the same meaning that this is a triangle")
+    if len(uniquepoints) < 4: #check to see there are no points that overlap
+        print("O no, two points overlap, please try to input a quadrilateral")
     else:
         lengthAB = sqrt((x2-x1)**2 + (y2-y1)**2)
         lengthBC = sqrt((x3-x2)**2 + (y3-y2)**2)
@@ -39,23 +44,23 @@ while True:
         diagonalBD = sqrt((x4-x2)**2+(y4-y2)**2)
 
         parallelSides = 0 
-        #Check AB and CD for parallel sides
+        #Check if AB and CD are parallel sides
         if slope(x1,y1,x2,y2) == slope(x3,y3,x4,y4):
             parallelSides = parallelSides + 1
-        #Check AD and BC for parallel sides
+        #Check if AD and BC are parallel sides
         if slope(x1,y1,x4,y4) == slope(x2,y2,x3,y3):
             parallelSides = parallelSides + 1
 
-        #First check for parallel sides to classify shapes and then check for shape specific characteristics
+        #First check for parallel sides to classify shapes
         if parallelSides == 2:        
-            if diagonalAC == diagonalBD:
+            if diagonalAC == diagonalBD: 
                 if lengthAB == lengthBC == lengthCD == lengthDA:
-                    if slope(x1,y1,x4,y4) == 0:
+                    if slope(x1,y1,x4,y4) == 0 or slope(x1,y1,x4,y4) == "undefined": #checks if one side is vertical or horizontal to find if square is horizontal to x axis 
                         print("horizontal square")
                     else:
                         print("tilted square")
                 else:
-                    if slope(x1,y1,x4,y4) == 0:
+                    if slope(x1,y1,x4,y4) == 0 or slope(x1,y1,x4,y4) == "undefined": #same as above
                         print("horizontal rectangle")
                     else:
                         print("tilted rectangle")
@@ -65,24 +70,24 @@ while True:
                     print("rhombus")
                 else:
                     #check for both possibilities for pair of parallel lines that are horizontal
-                    if slope(x1,y1,x2,y2) == 0 and slope(x3,y3,x4,y4) == 0:
+                    if slope(x1,y1,x2,y2) == 0 and slope(x3,y3,x4,y4) == 0: #lines AB and CD
                         print("horizontal parallelogram")
-                    elif slope(x1,y1,x4,y4) == 0 and slope(x2,y2,x3,y3) == 0:
+                    elif slope(x1,y1,x4,y4) == 0 and slope(x2,y2,x3,y3) == 0: #lines AD and BC
                         print("horizontal parallelogram")
                     else:
                         print("tilted parallelogram")
                         
         elif parallelSides == 1:
             #check for both possibilities for pair of parallel lines that are horizontal
-            if slope(x1,y1,x2,y2) == 0 and slope(x3,y3,x4,y4) == 0:
+            if slope(x1,y1,x2,y2) == 0 and slope(x3,y3,x4,y4) == 0: #same as above 
                 print("horizontal trapezoid")
-            elif slope(x1,y1,x4,y4) == 0 and slope(x2,y2,x3,y3) == 0:
+            elif slope(x1,y1,x4,y4) == 0 and slope(x2,y2,x3,y3) == 0: #same as above 
                 print("horizontal trapezoid")
                 
             #check for both possibilities for pair of parallel lines that are vertical
-            elif slope(x1,y1,x2,y2) == "undefined" and slope(x3,y3,x4,y4) == "undefined":
+            elif slope(x1,y1,x2,y2) == "undefined" and slope(x3,y3,x4,y4) == "undefined": #lines AB and CD
                 print("vertical trapezoid")
-            elif slope(x1,y1,x4,y4) == "undefined" and slope(x2,y2,x3,y3) == "undefined":
+            elif slope(x1,y1,x4,y4) == "undefined" and slope(x2,y2,x3,y3) == "undefined": #lines AD and BC
                 print("vertical trapezoid")
 
             else:
