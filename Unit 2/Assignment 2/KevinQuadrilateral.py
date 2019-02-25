@@ -17,7 +17,12 @@ while True:
     y4 = int(input("Enter y4: "))
     #check if two points are the same
     points = [[x1,y1],[x2,y2],[x3,y3],[x4,y4]]
-    if len(list(set(points))) == 4:
+    uniquepoints = []
+    for i in points:
+        if i not in uniquepoints:
+            uniquepoints.append(i)
+
+    if len(uniquepoints) < 4:
         print("o no two points are the same meaning that this is a triangle")
     else:
         lengthAB = sqrt((x2-x1)**2 + (y2-y1)**2)
@@ -28,12 +33,11 @@ while True:
         diagonalAC = sqrt((x3-x1)**2+(y3-y1)**2)
         diagonalBD = sqrt((x4-x2)**2+(y4-y2)**2)
 
-        parallelSides = 0
-        #Check AB and CD
+        parallelSides = 0 
+        #Check AB and CD for parallel sides
         if slope(x1,y1,x2,y2) == slope(x3,y3,x4,y4):
             parallelSides = parallelSides + 1
-            
-        #Check AD and BC
+        #Check AD and BC for parallel sides
         if slope(x1,y1,x4,y4) == slope(x2,y2,x3,y3):
             parallelSides = parallelSides + 1
 
@@ -55,25 +59,25 @@ while True:
                 if lengthAB == lengthBC == lengthCD == lengthDA:
                     print("rhombus")
                 else:
-                    #check for both posibilities for pair of parrallel lines that are horizontal
+                    #check for both possibilities for pair of parallel lines that are horizontal
                     if slope(x1,y1,x2,y2) == 0 and slope(x3,y3,x4,y4) == 0:
                         print("horizontal parallelogram")
-                    elif slope(x1,y1,x3,y3) == 0 and slope(x2,y2,x4,y4) == 0:
+                    elif slope(x1,y1,x4,y4) == 0 and slope(x2,y2,x3,y3) == 0:
                         print("horizontal parallelogram")
                     else:
                         print("tilted parallelogram")
                         
         elif parallelSides == 1:
-            #check for both posibilities for pair of parrallel lines that are horizontal
+            #check for both possibilities for pair of parallel lines that are horizontal
             if slope(x1,y1,x2,y2) == 0 and slope(x3,y3,x4,y4) == 0:
                 print("horizontal trapezoid")
-            elif slope(x1,y1,x3,y3) == 0 and slope(x2,y2,x4,y4) == 0:
+            elif slope(x1,y1,x4,y4) == 0 and slope(x2,y2,x3,y3) == 0:
                 print("horizontal trapezoid")
                 
-            #check for both posibilities for pair of parrallel lines that are vertical
+            #check for both possibilities for pair of parallel lines that are vertical
             elif slope(x1,y1,x2,y2) == "undefined" and slope(x3,y3,x4,y4) == "undefined":
                 print("vertical trapezoid")
-            elif slope(x1,y1,x2,y2) == "undefined" and slope(x3,y3,x4,y4) == "undefined":
+            elif slope(x1,y1,x4,y4) == "undefined" and slope(x2,y2,x3,y3) == "undefined":
                 print("vertical trapezoid")
 
             else:
@@ -86,4 +90,3 @@ while True:
                 print("kite")
             else:
                 print("weird quadrilateral")
-
