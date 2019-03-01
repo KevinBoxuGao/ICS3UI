@@ -62,7 +62,7 @@ while True:
                 if lengthAB == lengthBC == lengthCD == lengthDA: #Equal sides indicates a square
                     if slope(x1,y1,x4,y4) == 0 or slope(x1,y1,x4,y4) == "undefined": #checks if one side is vertical or horizontal to find if square is horizontal to x axis 
                         print("horizontal square")
-                    else
+                    else:
                         print("tilted square")
                 else:
                     if slope(x1,y1,x4,y4) == 0 or slope(x1,y1,x4,y4) == "undefined": #same as above
