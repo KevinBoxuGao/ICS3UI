@@ -9,6 +9,13 @@ def create_ring(top,center, width, height):
     screen.create_polygon(center-width/2, top, center+width/2, top, center+width/2, top+height, center-width/2, top+height, fill=color, outline=outline, smooth=True)
 
 #drawing individual parts
+def create_crown(top,center,height1, height2, width):
+    screen.create_arc(center-width/3, top, center+width/3, top + 2*height1, start=0, extent=180, fill=color, outline=outline)
+    screen.create_oval(center-width/8, top-width/6, center+width/8, top, fill=color, outline=outline)
+    screen.create_polygon(center-width/2, top+height1, center+width/2, top+height1, center+width/3, top+height1+height2, center-width/3, top+height1+height2, fill=color, outline=outline)
+
+    screen.create_polygon(center-width/2, top+height1, center+width/2 ,top+height1, center+width/2.4, top+height1 - 10, center-width/2.4 ,top+height1 - 10, fill=color, outline=outline)
+
 def create_cross(top, center, height, width):
     screen.create_rectangle(center-width/2, top, center+width/2, top+height, fill=color, outline=outline)
     screen.create_rectangle(center-40, top+40+width/2, center+40, top+40-width/2, fill=color, outline=outline)
@@ -56,10 +63,12 @@ for x in range(0,1600,200):
 
 
 #create chess pieces
-center = 100
-top = 150
+
 
 #white king
+center = 1100
+top = 50
+
 color = "white"
 outline= "black"
 
@@ -70,12 +79,18 @@ create_neck(top + 190, center, 50, 105, 80)
 create_body(top+ 240, center, 240)
 create_base(top+480, center, 160, 30)
 
-create_cross(top, center, 80, 20)
-create_pedestal(top + 80, center, 20, 35)
-create_head(top + 100, center, 10, 80, 120)
+
+#white queen
+center = 1300
+top = 150
+
+
+create_crown(top+70, center, 40, 80, 120)
 create_neck(top + 190, center, 50, 105, 80)
 create_body(top+ 240, center, 240)
 create_base(top+480, center, 160, 30)
+
+
 
 #black king
 center = 1500
