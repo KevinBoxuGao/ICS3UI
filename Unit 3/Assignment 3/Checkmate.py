@@ -1,7 +1,7 @@
 from tkinter import *
 
 tk = Tk()
-screen = Canvas(tk, width=1600, height=800, background="white")
+screen = Canvas(tk, width=800, height=800, background="white")
 screen.pack()
 
 
@@ -45,18 +45,18 @@ def create_base(top,center,width,height):
     screen.create_rectangle(center-width/2, top, center+width/2, top+height, fill=color, outline=outline)
 
 #background and ground
-screen.create_rectangle(0,500,1600,800, fill="white", outline="white")
-screen.create_rectangle(0,0,1600,500, fill="white", outline="white")
-screen.create_line(0,500,1600,500)
+screen.create_rectangle(0,500,800,800, fill="white", outline="white")
+screen.create_rectangle(0,0,800,500, fill="white", outline="white")
+screen.create_line(0,500,800,500)
 
 i=0
 j=0
-for x in range(0,1600,200):
+for x in range(0,800,200):
     i=i+1 
     for y in range(500,800,100):
         j=j+1
         if j % 2 == 1:
-            color = "#2e0000"
+            color = "#3a3830"
         else:
             color = "#c8bc90"
         screen.create_rectangle(x,y, x+200, y+100, fill=color)
@@ -66,10 +66,10 @@ for x in range(0,1600,200):
 
 
 #white king
-center = 1100
+center = 300
 top = 50
 
-color = "white"
+color = "#f7e9af"
 outline= "black"
 
 create_cross(top, center, 80, 20)
@@ -81,7 +81,7 @@ create_base(top+480, center, 160, 30)
 
 
 #white queen
-center = 1300
+center = 500
 top = 150
 
 
@@ -93,7 +93,7 @@ create_base(top+480, center, 160, 30)
 
 
 #black king
-center = 1500
+center = 700
 top = 150
 color = "black"
 outline="white"
