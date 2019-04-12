@@ -13,10 +13,66 @@ def convertRGB(r, g , b):
 groundRGB = [124, 252, 0]
 skyRGB = [0, 175, 255]
 
-#constant y coordinates
+#clouds
+cloudRGB = [255, 255, 255]
+
+numClouds = 3
+clouds = []
+cloudXStart = [-130-800, 225-800, 600-800]
+cloudYStart = [150, 110, 200]
+cloudX = []
+cloudY = []
+cloudSize = []
+
+for i in range(numClouds):
+    blobX = []
+    blobY = []
+    cloudBlobs = []
+    blobSize = []
+
+    for j in range(50):
+        blobX.append(randint(cloudXStart[i]-100, cloudXStart[i]+100))
+        blobY.append(randint(cloudYStart[i]-50, cloudYStart[i]+50))
+        blobSize.append(randint(30, 50))
+        cloudBlobs.append(0)
+
+    cloudX.append(blobX)
+    cloudY.append(blobY)
+    clouds.append(cloudBlobs)
+    cloudSize.append(blobSize)
+
+
+for f in range(1000):
+    for i in range(numClouds):
+        if cloudXStart[i] - 100 - 50 >= 800:
+            cloudXStart[i] = -150
+            for j in range(50):
+                cloudX[i][j] = cloudX[i][j] - 800 - 200 - 50 -50             
+
+        cloudRGB[0] = cloudRGB[0] - 1
+        cloudRGB[1] = cloudRGB[1] - 1
+        cloudRGB[2] = cloudRGB[2] - 1
+        cloudXStart[i] = cloudXStart[i] + 5
+        for j in range(50):
+            cloudX[i][j] = cloudX[i][j] + 5
+            clouds[i][j] = screen.create_oval(cloudX[i][j] + cloudSize[i][j], cloudY[i][j] + cloudSize[i][j], cloudX[i][j] - cloudSize[i][j], cloudY[i][j] - cloudSize[i][j], fill="white", outline="white")
+
+
+
+    screen.update()
+    sleep(0.03)
+
+    for i in range(numClouds):
+        for j in range(50):
+            screen.delete(clouds[i][j])
+    
+
+
+#stars
 numStars = 500
 constY = []
 sizes = []
+
 for i in range(numStars):
     diceRoll = randint(1, 100)
     if diceRoll > 90:
