@@ -3,12 +3,29 @@ from time import *
 from random import *
 
 root = Tk()
-screen = Canvas( root, width=800, height=800, background = "black" )
+screen = Canvas( root, width=800, height=800, background = "black")
 screen.pack()
 
 #helper function that converts RGB to Hex
 def convertRGB(r, g , b):
     return '#%02x%02x%02x' % (r, g, b)
+
+#tree
+treeX = 700
+treeY = 700
+#stump
+stumpRGB = [165, 42, 42]
+#leaves
+leaveRGB = [0,128,0]
+numLeaves = 1000
+leavetreeX = []
+leavetreeY = []
+leaves = []
+
+for i in range(numLeaves):
+    leavetreeX.append(randint(treeX-200, treeX+200))
+    leavetreeY.append(randint(treeY-400, treeY-270))
+    leaves.append(0)
 
 #starting Values
 #ground and sky
@@ -17,7 +34,6 @@ skyRGB = [0, 175, 255]
 
 #clouds
 cloudRGB = [255, 255, 255]
-
 numClouds = 3
 clouds = []
 cloudXStart = [-130-800, 225-800, 600-800]
@@ -81,7 +97,7 @@ while True:
 
     #day to night
     for f in range(255):
-        #change ground and sky
+        #change ground, sky and tree color
         groundColor = convertRGB(groundRGB[0],groundRGB[1],groundRGB[2])
         skyColor = convertRGB(skyRGB[0],skyRGB[1],skyRGB[2])
 
@@ -94,6 +110,19 @@ while True:
             skyRGB[1] = skyRGB[1] - 1
         if skyRGB[2] > 0:
             skyRGB[2] = skyRGB[2] - 1
+
+        stumpColor = convertRGB(stumpRGB[0], stumpRGB[1], stumpRGB[2])
+        leaveColor = convertRGB(leaveRGB[0], leaveRGB[1], leaveRGB[2])
+
+        if stumpRGB[0] > 30:
+            stumpRGB[0] = stumpRGB[0] - 1
+        if stumpRGB[1] > 0:
+            stumpRGB[1] = stumpRGB[1] - 1
+        if stumpRGB[1] > 0:
+            stumpRGB[1] = stumpRGB[1] - 1
+
+        if leaveRGB[1] > 30:
+            leaveRGB[1] = leaveRGB[1] - 1
 
         sky = screen.create_rectangle(0, 0, 810, 600, fill=skyColor, outline=skyColor)
         ground = screen.create_rectangle(0, 600, 810, 810, fill=groundColor, outline=groundColor)
@@ -112,17 +141,53 @@ while True:
             for j in range(50):
                 cloudX[i][j] = cloudX[i][j] + 5
                 clouds[i][j] = screen.create_oval(cloudX[i][j] + cloudSize[i][j], cloudY[i][j] + cloudSize[i][j], cloudX[i][j] - cloudSize[i][j], cloudY[i][j] - cloudSize[i][j], fill=convertRGB(cloudRGB[0], cloudRGB[1], cloudRGB[2]), outline=convertRGB(cloudRGB[0], cloudRGB[1], cloudRGB[2]))
+        
+        #draw tree stump
+        stump = screen.create_polygon(
+        treeX-50 , treeY, 
+        treeX-50, treeY-150, 
+        treeX-50-20, treeY-150-30, 
+        treeX-50-20-10, treeY-150-30-40, 
+        treeX-50-20-10, treeY-150-30-40-40, 
+        treeX-50-20-10-50, treeY-150-30-40-40-20, 
+        treeX-50-20-10-50-30, treeY-150-30-40-40-20-40, 
+        treeX-50-20-10-50-30+30, treeY-150-30-40-40-20-40,
+        treeX-50-20-10-50-30+30+24, treeY-150-30-40-40-20-40+32,
+        treeX-50-20-10-50-30+30+24+40, treeY-150-30-40-40-20-40+32+16,
+        treeX-50-20-10-50-30+30+24+40+40, treeY-150-30-40-40-20-40+32+16-40,
+        treeX-50-20-10-50-30+30+24+40+40+30, treeY-150-30-40-40-20-40+32+16-40,
+        treeX-50-20-10-50-30+30+24+40+40+30-55, treeY-150-30-40-40-20-40+32+16-40+55,
+        treeX-50-20-10-50-30+30+24+40+40+30-55, treeY-150-30-40-40-20-40+32+16-40+55+50,
+        treeX-50-20-10-50-30+30+24+40+40+30-55+15, treeY-150-30-40-40-20-40+32+16-40+55+50+40,
+        treeX-50-20-10-50-30+30+24+40+40+30-55+15+20, treeY-150-30-40-40-20-40+32+16-40+55+50+40,
+        treeX-50-20-10-50-30+30+24+40+40+30-55+15+20+10, treeY-150-30-40-40-20-40+32+16-40+55+50+40-50,
+        treeX-50-20-10-50-30+30+24+40+40+30-55+15+20+10+90, treeY-150-30-40-40-20-40+32+16-40+55+50+40-50-70,
+        treeX-50-20-10-50-30+30+24+40+40+30-55+15+20+10+90+40, treeY-150-30-40-40-20-40+32+16-40+55+50+40-50-70,
+        treeX-50-20-10-50-30+30+24+40+40+30-55+15+20+10+90+40-108, treeY-150-30-40-40-20-40+32+16-40+55+50+40-50-70+84,
+        treeX-50-20-10-50-30+30+24+40+40+30-55+15+20+10+90+40-108-20, treeY-150-30-40-40-20-40+32+16-40+55+50+40-50-70+84+60,
+        treeX-50-20-10-50-30+30+24+40+40+30-55+15+20+10+90+40-108-20, treeY,
+        fill=stumpColor, outline=stumpColor)
+
+        #draw tree leaves
+        for i in range(numLeaves):
+            leaves[i] = screen.create_oval(leavetreeX[i]-10, leavetreeY[i]-5, leavetreeX[i]+10, leavetreeY[i]+5, fill=leaveColor)
 
         screen.update()
-        sleep(0.03)
-        screen.delete(sky, ground)
+        sleep(0.005)
+        screen.delete(sky, ground, stump)
 
         for i in range(numClouds):
             for j in range(50):
                 screen.delete(clouds[i][j])
+
+        for i in range(numLeaves):
+            screen.delete(leaves[i])
     
     #draw stars during night
     for f in range(350):
+        stumpColor = convertRGB(stumpRGB[0], stumpRGB[1], stumpRGB[2])
+        leaveColor = convertRGB(leaveRGB[0], leaveRGB[1], leaveRGB[2])
+
         #overlap ground
         groundColor = convertRGB(groundRGB[0],groundRGB[1],groundRGB[2])
         if groundRGB[0] > 0:
@@ -155,20 +220,50 @@ while True:
 
         ground = screen.create_rectangle(0, 600, 810, 810, fill=groundColor, outline=groundColor)
 
+
+        #draw tree stump
+        stump = screen.create_polygon(
+        treeX-50 , treeY, 
+        treeX-50, treeY-150, 
+        treeX-50-20, treeY-150-30, 
+        treeX-50-20-10, treeY-150-30-40, 
+        treeX-50-20-10, treeY-150-30-40-40, 
+        treeX-50-20-10-50, treeY-150-30-40-40-20, 
+        treeX-50-20-10-50-30, treeY-150-30-40-40-20-40, 
+        treeX-50-20-10-50-30+30, treeY-150-30-40-40-20-40,
+        treeX-50-20-10-50-30+30+24, treeY-150-30-40-40-20-40+32,
+        treeX-50-20-10-50-30+30+24+40, treeY-150-30-40-40-20-40+32+16,
+        treeX-50-20-10-50-30+30+24+40+40, treeY-150-30-40-40-20-40+32+16-40,
+        treeX-50-20-10-50-30+30+24+40+40+30, treeY-150-30-40-40-20-40+32+16-40,
+        treeX-50-20-10-50-30+30+24+40+40+30-55, treeY-150-30-40-40-20-40+32+16-40+55,
+        treeX-50-20-10-50-30+30+24+40+40+30-55, treeY-150-30-40-40-20-40+32+16-40+55+50,
+        treeX-50-20-10-50-30+30+24+40+40+30-55+15, treeY-150-30-40-40-20-40+32+16-40+55+50+40,
+        treeX-50-20-10-50-30+30+24+40+40+30-55+15+20, treeY-150-30-40-40-20-40+32+16-40+55+50+40,
+        treeX-50-20-10-50-30+30+24+40+40+30-55+15+20+10, treeY-150-30-40-40-20-40+32+16-40+55+50+40-50,
+        treeX-50-20-10-50-30+30+24+40+40+30-55+15+20+10+90, treeY-150-30-40-40-20-40+32+16-40+55+50+40-50-70,
+        treeX-50-20-10-50-30+30+24+40+40+30-55+15+20+10+90+40, treeY-150-30-40-40-20-40+32+16-40+55+50+40-50-70,
+        treeX-50-20-10-50-30+30+24+40+40+30-55+15+20+10+90+40-108, treeY-150-30-40-40-20-40+32+16-40+55+50+40-50-70+84,
+        treeX-50-20-10-50-30+30+24+40+40+30-55+15+20+10+90+40-108-20, treeY-150-30-40-40-20-40+32+16-40+55+50+40-50-70+84+60,
+        treeX-50-20-10-50-30+30+24+40+40+30-55+15+20+10+90+40-108-20, treeY,
+        fill=stumpColor)
+
+        #draw tree leaves
+        for i in range(numLeaves):
+            leaves[i] = screen.create_oval(leavetreeX[i]-10, leavetreeY[i]-5, leavetreeX[i]+10, leavetreeY[i]+5, fill=leaveColor)
+
         screen.update()    
-        sleep(0.03)
-        screen.delete(ground)
+        sleep(0.005)
+
+        screen.delete(ground, stump)
         for i in range(numStars):
             screen.delete(stars[i])
 
-    #reset star color
-    starRGB[0] = 255
-    starRGB[1] = 255
-    starRGB[2] = 255
- 
+        for i in range(numLeaves):
+            screen.delete(leaves[i])
+
     #night to day
     for f in range(255):
-        #set sky and ground color
+        #set sky, ground and tree color
         groundColor = convertRGB(groundRGB[0],groundRGB[1],groundRGB[2])
         skyColor = convertRGB(skyRGB[0],skyRGB[1],skyRGB[2])
 
@@ -181,6 +276,19 @@ while True:
             skyRGB[1] = skyRGB[1] +1
         if skyRGB[2]  < 255:
             skyRGB[2] = skyRGB[2] +1
+
+        stumpColor = convertRGB(stumpRGB[0], stumpRGB[1], stumpRGB[2])
+        leaveColor = convertRGB(leaveRGB[0], leaveRGB[1], leaveRGB[2])
+
+        if stumpRGB[0] < 165:
+            stumpRGB[0] = stumpRGB[0] + 1
+        if stumpRGB[1] < 42 and f > 12:
+            stumpRGB[1] = stumpRGB[1] + 1
+        if stumpRGB[1] < 42 and f > 12:
+            stumpRGB[1] = stumpRGB[1] + 1
+
+        if leaveRGB[1] < 128:
+            leaveRGB[1] = leaveRGB[1] + 1
 
         sky = screen.create_rectangle(0,0, 800, 600, fill=skyColor, outline=skyColor)
 
@@ -205,14 +313,47 @@ while True:
                     cloudX[i][j] = cloudX[i][j] + 5
                     clouds[i][j] = screen.create_oval(cloudX[i][j] + cloudSize[i][j], cloudY[i][j] + cloudSize[i][j], cloudX[i][j] - cloudSize[i][j], cloudY[i][j] - cloudSize[i][j], fill=convertRGB(cloudRGB[0], cloudRGB[1], cloudRGB[2]), outline=convertRGB(cloudRGB[0], cloudRGB[1], cloudRGB[2]))
             
+            #draw tree stump
+            stump = screen.create_polygon(
+            treeX-50 , treeY, 
+            treeX-50, treeY-150, 
+            treeX-50-20, treeY-150-30, 
+            treeX-50-20-10, treeY-150-30-40, 
+            treeX-50-20-10, treeY-150-30-40-40, 
+            treeX-50-20-10-50, treeY-150-30-40-40-20, 
+            treeX-50-20-10-50-30, treeY-150-30-40-40-20-40, 
+            treeX-50-20-10-50-30+30, treeY-150-30-40-40-20-40,
+            treeX-50-20-10-50-30+30+24, treeY-150-30-40-40-20-40+32,
+            treeX-50-20-10-50-30+30+24+40, treeY-150-30-40-40-20-40+32+16,
+            treeX-50-20-10-50-30+30+24+40+40, treeY-150-30-40-40-20-40+32+16-40,
+            treeX-50-20-10-50-30+30+24+40+40+30, treeY-150-30-40-40-20-40+32+16-40,
+            treeX-50-20-10-50-30+30+24+40+40+30-55, treeY-150-30-40-40-20-40+32+16-40+55,
+            treeX-50-20-10-50-30+30+24+40+40+30-55, treeY-150-30-40-40-20-40+32+16-40+55+50,
+            treeX-50-20-10-50-30+30+24+40+40+30-55+15, treeY-150-30-40-40-20-40+32+16-40+55+50+40,
+            treeX-50-20-10-50-30+30+24+40+40+30-55+15+20, treeY-150-30-40-40-20-40+32+16-40+55+50+40,
+            treeX-50-20-10-50-30+30+24+40+40+30-55+15+20+10, treeY-150-30-40-40-20-40+32+16-40+55+50+40-50,
+            treeX-50-20-10-50-30+30+24+40+40+30-55+15+20+10+90, treeY-150-30-40-40-20-40+32+16-40+55+50+40-50-70,
+            treeX-50-20-10-50-30+30+24+40+40+30-55+15+20+10+90+40, treeY-150-30-40-40-20-40+32+16-40+55+50+40-50-70,
+            treeX-50-20-10-50-30+30+24+40+40+30-55+15+20+10+90+40-108, treeY-150-30-40-40-20-40+32+16-40+55+50+40-50-70+84,
+            treeX-50-20-10-50-30+30+24+40+40+30-55+15+20+10+90+40-108-20, treeY-150-30-40-40-20-40+32+16-40+55+50+40-50-70+84+60,
+            treeX-50-20-10-50-30+30+24+40+40+30-55+15+20+10+90+40-108-20, treeY,
+            fill=stumpColor)
+
+            #draw tree leaves
+            for i in range(numLeaves):
+                leaves[i] = screen.create_oval(leavetreeX[i]-10, leavetreeY[i]-5, leavetreeX[i]+10, leavetreeY[i]+5, fill=leaveColor)
+
             screen.update()
-            sleep(0.03)
-            screen.delete(ground, sky, sun)
+            sleep(0.005)
+            screen.delete(ground, sky, sun, stump)
 
 
             for i in range(numClouds):
                 for j in range(50):
                     screen.delete(clouds[i][j])
+
+            for i in range(numLeaves):
+                screen.delete(leaves[i])
 
         #draw setting without sun
         else:
@@ -233,13 +374,46 @@ while True:
                     cloudX[i][j] = cloudX[i][j] + 5
                     clouds[i][j] = screen.create_oval(cloudX[i][j] + cloudSize[i][j], cloudY[i][j] + cloudSize[i][j], cloudX[i][j] - cloudSize[i][j], cloudY[i][j] - cloudSize[i][j], fill=convertRGB(cloudRGB[0], cloudRGB[1], cloudRGB[2]), outline=convertRGB(cloudRGB[0], cloudRGB[1], cloudRGB[2]))
             
+            #draw tree stump
+            stump = screen.create_polygon(
+            treeX-50 , treeY, 
+            treeX-50, treeY-150, 
+            treeX-50-20, treeY-150-30, 
+            treeX-50-20-10, treeY-150-30-40, 
+            treeX-50-20-10, treeY-150-30-40-40, 
+            treeX-50-20-10-50, treeY-150-30-40-40-20, 
+            treeX-50-20-10-50-30, treeY-150-30-40-40-20-40, 
+            treeX-50-20-10-50-30+30, treeY-150-30-40-40-20-40,
+            treeX-50-20-10-50-30+30+24, treeY-150-30-40-40-20-40+32,
+            treeX-50-20-10-50-30+30+24+40, treeY-150-30-40-40-20-40+32+16,
+            treeX-50-20-10-50-30+30+24+40+40, treeY-150-30-40-40-20-40+32+16-40,
+            treeX-50-20-10-50-30+30+24+40+40+30, treeY-150-30-40-40-20-40+32+16-40,
+            treeX-50-20-10-50-30+30+24+40+40+30-55, treeY-150-30-40-40-20-40+32+16-40+55,
+            treeX-50-20-10-50-30+30+24+40+40+30-55, treeY-150-30-40-40-20-40+32+16-40+55+50,
+            treeX-50-20-10-50-30+30+24+40+40+30-55+15, treeY-150-30-40-40-20-40+32+16-40+55+50+40,
+            treeX-50-20-10-50-30+30+24+40+40+30-55+15+20, treeY-150-30-40-40-20-40+32+16-40+55+50+40,
+            treeX-50-20-10-50-30+30+24+40+40+30-55+15+20+10, treeY-150-30-40-40-20-40+32+16-40+55+50+40-50,
+            treeX-50-20-10-50-30+30+24+40+40+30-55+15+20+10+90, treeY-150-30-40-40-20-40+32+16-40+55+50+40-50-70,
+            treeX-50-20-10-50-30+30+24+40+40+30-55+15+20+10+90+40, treeY-150-30-40-40-20-40+32+16-40+55+50+40-50-70,
+            treeX-50-20-10-50-30+30+24+40+40+30-55+15+20+10+90+40-108, treeY-150-30-40-40-20-40+32+16-40+55+50+40-50-70+84,
+            treeX-50-20-10-50-30+30+24+40+40+30-55+15+20+10+90+40-108-20, treeY-150-30-40-40-20-40+32+16-40+55+50+40-50-70+84+60,
+            treeX-50-20-10-50-30+30+24+40+40+30-55+15+20+10+90+40-108-20, treeY,
+            fill=stumpColor)
+
+            #draw tree leaves
+            for i in range(numLeaves):
+                leaves[i] = screen.create_oval(leavetreeX[i]-10, leavetreeY[i]-5, leavetreeX[i]+10, leavetreeY[i]+5, fill=leaveColor)
+
             screen.update()
-            sleep(0.03)
-            screen.delete(ground, sky)
+            sleep(0.005)
+            screen.delete(ground, sky, stump)
 
             for i in range(numClouds):
                 for j in range(50):
                     screen.delete(clouds[i][j])
+
+            for i in range(numLeaves):
+                screen.delete(leaves[i])
 
 
         
