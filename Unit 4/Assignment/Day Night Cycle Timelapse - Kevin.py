@@ -193,7 +193,7 @@ while True:
         if groundRGB[1] > 30:
             groundRGB[1] = groundRGB[1] - 1
 
-        #draw stars 
+
         #fade stars in
         if f < 51 and starRGB[0] < 255:
             starRGB[0] = starRGB[0] +5
@@ -205,7 +205,7 @@ while True:
             starRGB[0] = starRGB[0] -5
             starRGB[1] = starRGB[1] -5
             starRGB[2] = starRGB[2] -5
-
+        #draw stars 
         for i in range(numStars):
             if x[i] - sizes[i] >= 800:
                 x[i] = 0
