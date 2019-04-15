@@ -10,6 +10,7 @@ screen.pack()
 def convertRGB(r, g , b):
     return '#%02x%02x%02x' % (r, g, b)
 
+#starting Values
 #tree
 treeX = 700
 treeY = 700
@@ -21,16 +22,14 @@ numLeaves = 1000
 leavetreeX = []
 leavetreeY = []
 leaves = []
-
 for i in range(numLeaves):
     leavetreeX.append(randint(treeX-200, treeX+200))
     leavetreeY.append(randint(treeY-400, treeY-270))
     leaves.append(0)
 
-#starting Values
-#ground and sky
-groundRGB = [124, 252, 0]
+#sky and ground
 skyRGB = [0, 175, 255]
+groundRGB = [124, 252, 0]
 
 #clouds
 cloudRGB = [255, 255, 255]
@@ -67,18 +66,16 @@ starRGB = [0, 0, 0]
 
 for i in range(numStars):
     diceRoll = randint(1, 100)
-    if diceRoll > 90:
-        sizes.append(4)
-    elif diceRoll > 75:
+    if diceRoll > 98:
         sizes.append(3)
-    elif diceRoll > 50:
+    elif diceRoll > 90:
         sizes.append(2)
     else:
         sizes.append(1)
     constY.append(randint(0-20, 600+20))
 
 
-#animation driver
+#animation loop
 while True:
     #sun
     radius = 40
@@ -134,6 +131,7 @@ while True:
         for i in range(numClouds):
             if cloudXStart[i] - 100 - 50 >= 800:
                 cloudXStart[i] = -150
+                cloudYStart[i] = randint(50, 210)
                 for j in range(50):
                     cloudX[i][j] = cloudX[i][j] - 800 - 200 - 50 -50             
             
@@ -414,6 +412,3 @@ while True:
 
             for i in range(numLeaves):
                 screen.delete(leaves[i])
-
-
-        
