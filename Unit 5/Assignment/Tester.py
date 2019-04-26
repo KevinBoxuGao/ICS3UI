@@ -1,7 +1,7 @@
 from FactoringToolbox import *
 
 #input of trinomial should be in form ax^2+bx+c
-#use function factor() on trinomial string
+#use function factorQuadratic() on trinomial string
 Cases = [
 "x^2+18x+32", 
 "x^2+17x+32", 
@@ -23,8 +23,8 @@ Cases = [
 "-10x^2+5x",
 ]
 
-testCases = [[1,18,32],[1,17,32],[1,-16,63],[1,5,-24],[1,-5,-24],[1,0,-9],[1,0,-10],[1,0,9],[2,11,5],[12,-7,-10],[87,-29,143],[9,0,-100],[9,0,1],[3,12,6],[2,10,8],[5,0,-500],[1,7,0], [-10,5,0]]
+for i in Cases:
+   print(str(i), "=", factorQuadratic(i))
 
-for i in testCases:
-    print(str(i), "=", factorTrinomial(i))
+
 

@@ -2,10 +2,52 @@ from math import *
 
 #Parse and find a, b and c in string
 def findABC(trinomial):
+    trinomialString = trinomial.replace(" ", "")
     a = 0
     b = 0
     c = 0
+    
+    #finds first index of the substring
+    aIndex = trinomialString.find("x^2") #finds first index of the substring
+    if aIndex != -1: #check if a was not found as .find() will return -1
+        aCoefficient = trinomialString[:aIndex] #set coefficient to characters preceding x^2
+        if aCoefficient == "": #in the case that the coefficient is 1
+            a = 1
+        elif aCoefficient == "-": #in the case that the coefficient character is only a negative sign
+            a = -1
+        else: 
+            a = aCoefficient
+            
+        trinomialString = trinomialString[aIndex+3:] #set our trinomial string to not include a as well as x^2
 
+    bIndex = trinomialString.find("x")
+    if bIndex != -1: #check if b was not found
+        b = trinomialString[:bIndex] #set b to characters preceding x
+        trinomialString = trinomialString[bIndex+1:] #set trinomial to characters after b
+    if trinomialString != "": #check if the remainder of the string contains c since it would be empty if it isn't there
+        c = trinomialString
+    
+    #convert ABC into integers
+
+    #for some reason int() does not work on negative numbers in the function so we convert to positive integer then make it negative
+    try: 
+        a = int(a)
+    except ValueError:
+        a = a[1:] #makes string start right after the negative sign at the start of the string
+        a = int(a)
+        a = a*-1
+    try:
+        b = int(b)
+    except ValueError:
+        b = b[1:] #makes string start right after the negative sign at the start of the string
+        b = int(b)
+        b = b*-1
+    try:
+        c = int(c)
+    except ValueError:
+        c = c[1:] #makes string start right after the negative sign at the start of the string
+        c = int(c)
+        c = c*-1
 
     ABC = [a,b,c]
 
@@ -74,7 +116,7 @@ def getFactors(number):
 
     return [cf1, cf2] #return a list of two lists of common factors, or also known as a 2-dimensional array
 
-#get matching pair if a=1
+#get matching pair of coefficients if a=1
 def getMatchingPair1(cf1, cf2, b):
     matchingPair = [] #will be in form of [a, b] where factored trionomial is in form (x+a)(x+b)
     for i in range(len(cf1)):
@@ -86,7 +128,7 @@ def getMatchingPair1(cf1, cf2, b):
     
     return "Can't be factored" #if we never find a factor pair
 
-#get matching pair if a>1
+#get matching pair of coefficients if a>1
 def getMatchingPair2(aFactors, cFactors, b):
     matchingPair = [] #this time a 2-dimensional array in form of [[a,b],[c,d]] if the factored trionomial is in form (ax+b)(cx+d)
 
@@ -231,6 +273,6 @@ def factorTrinomial(abcValues):
 
     return trinomial
 
-def factor(trinomial):
+def factorQuadratic(trinomial):
     return factorTrinomial(findABC(trinomial)) 
 
