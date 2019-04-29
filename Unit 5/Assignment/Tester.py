@@ -26,5 +26,3 @@ Cases = [
 for i in Cases:
    print(str(i), "=", factorQuadratic(i))
 
-
-

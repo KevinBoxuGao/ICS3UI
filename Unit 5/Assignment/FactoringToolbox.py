@@ -22,7 +22,7 @@ def findABC(trinomial):
 
     bIndex = trinomialString.find("x")
     if bIndex != -1: #check if b was not found
-        b = trinomialString[:bIndex] #set b to characters preceding x
+        b = trinomialString[:bIndex] #set b to characters proceding x in the string
         trinomialString = trinomialString[bIndex+1:] #set trinomial to characters after b
     if trinomialString != "": #check if the remainder of the string contains c since it would be empty if it isn't there
         c = trinomialString
