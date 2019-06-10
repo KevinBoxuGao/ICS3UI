@@ -19,26 +19,32 @@ class Trash:
 
 		self.clicked = False
 
+	def remake(self): #used to reinitialize the garbage if it is missed
+		xDrawings.append(xDrawing(self.x, self.y))
+		#reassigns all of the values of the trash object
+		self.kind = choice(garbageKind) #chooses random garbage kind
+		kindIndex = garbageKind.index(self.kind)
+		self.trashGIF = choice(allTrashItemsGIFS[kindIndex])
+		item = trashItemGIF(self.kind) #creates temporary object to store values of gif
+		self.trashGIF = item.gif 
+		self.width = item.dimensions[0]
+		self.height = item.dimensions[1]
+		self.x = randint(0+(self.width//2), 600-(self.width//2))
+		self.y = randint(-900+(self.height//2), 0-(self.height//2))
 	def update(self): #set object location
+		global lives, score
 		self.y = self.y + ySpeed  # increases position of trash
 		# checks if piece of garbage has exceeded limit and is not clicked on
-		if self.y+(self.height//2) > 700 and self.clicked == False:
-			#lives = lives - 1
-			xDrawings.append(xDrawing(self.x, self.y))
-
-			#reassigns all of the values of the trash object
-			self.kind = choice(garbageKind) #chooses random garbage kind
+		if self.y+(self.height//2) > 900 and self.clicked == False:
+			lives = lives - 1
+			self.remake()
+		elif self.y+(self.height//2) > 700 and self.clicked == True: #checks if the trash is in the right bin
 			kindIndex = garbageKind.index(self.kind)
-			self.trashGIF = choice(allTrashItemsGIFS[kindIndex])
-
-			item = trashItemGIF(self.kind) #creates temporary object to store values of gif
-			self.trashGIF = item.gif 
-			self.width = item.dimensions[0]
-			self.height = item.dimensions[1]
-
-			self.x = randint(0+(self.width//2), 600-(self.width//2))
-			self.y = randint(-900+(self.height//2), 0-(self.height//2))
-
+			if trashBinArea[kindIndex][0] >= self.x-(self.width//2) or trashBinArea[kindIndex][1] >= self.x+(self.width//2):
+				score = score + 1
+			else: 
+				lives = lives - 1
+				self.remake()
 #object containing trash item gif information
 class trashItemGIF:
 	def __init__(self, kind):
@@ -65,23 +71,27 @@ def getDistance(x1, y1, x2, y2):
 # set our global variables
 def setInitialValues():
 	global score, lives, piecesOfTrash, ySpeed, garbageKind
-	global xMouse, yMouse, mouseDown, escPressed
+	global xMouse, yMouse, mouseDown, escPressed, clickedItem
 	global glassGIF, organicGIF, paperGIF, plasticGIF, allTrashItemsGIFS
-	global trashItemDimensions
+	global trashItemDimensions, trashBinArea
 	global garbageBinsGIF
 	
+
 	global xDrawings #array of all drawings of X's that indicate a lost life
 	xDrawings = []
+	clickedItem = 'None'
 
 	#trash item images
-	glassGIF = [PhotoImage(file="imgs/glass/glass1.gif"), PhotoImage(file="imgs/glass/glass2.gif"), PhotoImage(file="imgs/glass/glass3.gif"), PhotoImage(file="imgs/glass/glass4.gif")]
-	organicGIF = [PhotoImage(file="imgs/organic/organic1.gif"), PhotoImage(file="imgs/organic/organic2.gif"), PhotoImage(file="imgs/organic/organic3.gif"), PhotoImage(file="imgs/organic/organic4.gif")]
 	paperGIF = [PhotoImage(file="imgs/paper/paper1.gif"), PhotoImage(file="imgs/paper/paper2.gif"), PhotoImage(file="imgs/paper/paper3.gif")]
+	organicGIF = [PhotoImage(file="imgs/organic/organic1.gif"), PhotoImage(file="imgs/organic/organic2.gif"), PhotoImage(file="imgs/organic/organic3.gif"), PhotoImage(file="imgs/organic/organic4.gif")]
+	glassGIF = [PhotoImage(file="imgs/glass/glass1.gif"), PhotoImage(file="imgs/glass/glass2.gif"), PhotoImage(file="imgs/glass/glass3.gif"), PhotoImage(file="imgs/glass/glass4.gif")]
 	plasticGIF = [PhotoImage(file="imgs/plastic/plastic1.gif"), PhotoImage(file="imgs/plastic/plastic2.gif"), PhotoImage(file="imgs/plastic/plastic3.gif"), PhotoImage(file="imgs/plastic/plastic4.gif")]
 	#collection of all trash item images
-	allTrashItemsGIFS = [glassGIF, organicGIF, paperGIF, plasticGIF]
-	#multi-dimensional array that has heirarchy of an array of each kind of item, then dimensions for each item
-	trashItemDimensions = [[[29,82],[23,76],[23,81],[22,44]], [[57,74],[47,46],[46,58],[66,62]], [[80,60],[111,71],[106,76]], [[28,80],[52,64],[60,79],[39,39]]]
+	allTrashItemsGIFS = [paperGIF, organicGIF, glassGIF, plasticGIF]
+	#multi-dimensional array that has heirarchy of [kind of item][dimensions for each item]
+	trashItemDimensions = [[[80,60],[111,71],[106,76]], [[57,74],[47,46],[46,58],[66,62]], [[29,82],[23,76],[23,81],[22,44]], [[28,80],[52,64],[60,79],[39,39]]]
+	#array that stores regions of each bin in the x axis
+	trashBinArea = [[0,250],[250,500],[500,750],[750,900]]
 
 	garbageBinsGIF = PhotoImage(file = "imgs/garbage bins.gif")
 	garbageKind = ['glass', 'organic', 'paper', 'plastic']
@@ -146,11 +156,11 @@ def deleteObjects():
 			screen.delete(i.drawing[1])
 			xDrawings.remove(i)
 
-'''def mouseInsideImage(xImage, yImage):
-	if getDistance(xImage, xMouse, yImage, yMouse) < 
+def mouseInsideImage(xImage, yImage, width, height):
+	if xImage - width <= xMouse <= xImage + width and yImage - height <= yMouse <= yImage + height:
 		return True
 	else:
-		return False'''
+		return False
 
 # update positions of all of our objects
 def updateObjects():
@@ -158,36 +168,44 @@ def updateObjects():
 	for i in xDrawings:
 		i.time -= 1
 
-
 # KEYBIND HANDLERS
 # gets called when mouse is clicked
 def mouseClickHandler(event):
-	global xMouse, yMouse, mouseDown
+	global xMouse, yMouse, mouseDown, clickedItem
 
 	xMouse=event.x
 	yMouse=event.y
 
 	mouseDown=True
-	
+	for i in range(piecesOfTrash-1, -1, -1): #loop backwards through images so that image on top is clicked
+		item = trash[i]
+		if mouseInsideImage(item.x, item.y, item.width, item.height) == True:
+			item.clicked = True
+			clickedItem = i #records the index of our object so that we can set it's clicked value as false
+			break
 
 # gets called when mouse is moving and checks if mouse is clicked
 def mouseMotionHandler(event):
-	global xMouse, yMouse
+	global xMouse, yMouse, clickedItem
 
 	xMouse=event.x
 	yMouse=event.y
 
-	# if mouseDown == True:
-
+	if mouseDown == True and clickedItem != 'None':
+		trash[clickedItem].x = xMouse
+		trash[clickedItem].y = yMouse
+		
 # gets called when mouse is released
 def mouseReleaseHandler(event):
-	global xMouse, yMouse, mouseDown
+	global xMouse, yMouse, mouseDown, clickedItem
 
 	mouseDown=False
 
 	xMouse=event.x
 	yMouse=event.y
 
+	trash[clickedItem].clicked = False
+	clickedItem = 'None'
 # gets called when key is pressed
 def keyDownHandler(event):
 	global escPressed
@@ -213,6 +231,7 @@ def runGame():
 		deleteObjects()
 		updateObjects()
 	endGame()
+	print(score)
 
 # At the bottom
 root.after(0, runGame)
