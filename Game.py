@@ -8,22 +8,22 @@ screen = Canvas(root, width=600, height=900, background="white")
 
 #object model for a piece of trash
 class Trash:
-	def __init__(self, x, y, width, height, type, trashGIF): #set object variables on initialization
+	def __init__(self, x, y, width, height, category, trashGIF): #set object variables on initialization
 		self.x = x
 		self.y = y
 		self.width = width
 		self.height = height
 
-		self.type = type
+		self.category = category
 		self.trashGIF = trashGIF
 
 		self.clicked = False
 
 	def reset(self): #Method, reset trash object variables, giving the illusion that a new trash item is created
-		self.type = choice(trashType) #chooses random trash type
-		typeIndex = trashType.index(self.type) 
-		self.trashGIF = choice(allTrashItemGIFS[typeIndex])
-		item = trashItemGIF(self.type) #creates temporary object to store values of gif
+		self.category = choice(trashCategory) #chooses random trash category
+		categoryIndex = trashCategory.index(self.category) 
+		self.trashGIF = choice(allTrashItemGIFS[categoryIndex])
+		item = trashItemGIF(self.category) #creates temporary object to store values of gif
 		self.trashGIF = item.gif 
 		self.width = item.dimensions[0]
 		self.height = item.dimensions[1]
@@ -45,12 +45,12 @@ class Trash:
 		
 #object containing trash item gif information
 class trashItemGIF:
-	def __init__(self, type):
-		self.type = type
-		typeIndex = trashType.index(type)
-		self.gif = choice(allTrashItemGIFS[typeIndex])
-		trashGIFIndex = allTrashItemGIFS[typeIndex].index(self.gif)
-		self.dimensions = trashItemDimensions[typeIndex][trashGIFIndex]
+	def __init__(self, category):
+		self.category = category
+		categoryIndex = trashCategory.index(category) #gets the index of the category so that we can access the correct array of gifs
+		self.gif = choice(allTrashItemGIFS[categoryIndex])
+		trashGIFIndex = allTrashItemGIFS[categoryIndex].index(self.gif) #gets the index for the specific trash item in the category array so that we can access it's dimensions
+		self.dimensions = trashItemDimensions[categoryIndex][trashGIFIndex]
 
 #object for X drawing
 class xDrawing:
@@ -59,32 +59,30 @@ class xDrawing:
 		cross1 = screen.create_line(x+width, y+width, x-width,y-width, width="3", fill="red")
 		cross2 = screen.create_line(x+width, y-width, x-width, y+width, width="3", fill="red")
 
-		self.drawing = [cross1, cross2]
+		self.drawing = [cross1, cross2] 
 		self.time = 20 #time for how many frames the image will appear for
-# get distance between two points
-def getDistance(x1, y1, x2, y2):
-	return sqrt((x1-x2)**2 + (y1-y2)**2)
 
 # SET UP OUR VALUES
 # set our global variables
 def setInitialValues():
-	global score, lives, piecesOfTrash, ySpeed, trashType
+	global score, lives, piecesOfTrash, ySpeed, trashCategory
 	global xMouse, yMouse, mouseDown, escPressed, clickedItemNumber
 	global glassItemGIF, organicItemGIF, paperItemGIF, plasticItemGIF, allTrashItemGIFS, trashBinsGIF
-	global xDrawings
+	global xDrawings 
+	global introScreenGIF, instructionsScreenGIF, difficultyScreenGIF, loadingScreenGIF, gameOverScreenGIF
 	global trashItemDimensions, trashBinRegions
 
 	score = 0
 	lives = 3
 	piecesOfTrash = 10
 	ySpeed = 2
-	trashType = ['paper', 'organic', 'glass', 'plastic'] #list containing all possible types of trash
+	trashCategory = ['paper', 'organic', 'glass', 'plastic'] #list containing all possible categorys of trash
 
 	mouseDown = False
 	escPressed = False
 	clickedItemNumber = 'None' #index used to identify which trash object is clicked(will be None when there aren't any)
 	
-	#arrays of trash item gifs in their respective type
+	#arrays of trash item gifs in their respective category
 	paperItemGIF = [PhotoImage(file="imgs/paper/paper1.gif"), PhotoImage(file="imgs/paper/paper2.gif"), PhotoImage(file="imgs/paper/paper3.gif")]
 	organicItemGIF = [PhotoImage(file="imgs/organic/organic1.gif"), PhotoImage(file="imgs/organic/organic2.gif"), PhotoImage(file="imgs/organic/organic3.gif"), PhotoImage(file="imgs/organic/organic4.gif")]
 	glassItemGIF = [PhotoImage(file="imgs/glass/glass1.gif"), PhotoImage(file="imgs/glass/glass2.gif"), PhotoImage(file="imgs/glass/glass3.gif"), PhotoImage(file="imgs/glass/glass4.gif")]
@@ -96,14 +94,17 @@ def setInitialValues():
 
 	xDrawings = [] #array of all drawings of X's that indicate a lost life
 	
-	#multi-dimensional array that stores the fixed sizes of the gifs, has heirarchy of [type of item][item number][dimensions for each item]
+	#images for game screens
+	introScreenGIF = PhotoImage(file="")
+	instructionsScreenGIF = PhotoImage(file="")
+	difficultyScreenGIF = PhotoImage(file="")
+	loadingScreenGIF = PhotoImage(file="")
+	gameOverScreenGIF = PhotoImage(file="")
+
+	#multi-dimensional array that stores the fixed sizes of the gifs, has heirarchy of [category of item][item number][dimensions for each item]
 	trashItemDimensions = [[[80,60],[111,71],[106,76]], [[57,74],[47,46],[46,58],[66,62]], [[29,82],[23,76],[23,81],[22,44]], [[28,80],[52,64],[60,79],[39,39]]]
 	#array that stores range of valid x coordinates of each garbage bin 
 	trashBinRegions = [[0,150],[150,300],[300,450],[450,600]]
-
-#draw in background
-def drawTrashBins():
-	screen.create_image(300, 800, anchor="center", image=trashBinsGIF)
 
 #Functions for interacting with trash items
 #initializes trash objects and their values at the start of the game
@@ -111,23 +112,23 @@ def createTrash():
 	global trash 
 	trash = [] #array containing all trash objects
 	for i in range(piecesOfTrash):
-		type = choice(trashType) #chooses random trash type
-		item = trashItemGIF(type)
+		category = choice(trashCategory) #chooses random trash category
+		itemDrawing = trashItemGIF(category) #creates temporary drawing object so that we can access it's details
 
-		trashGIF = item.gif 
-		width = item.dimensions[0]
-		height = item.dimensions[1]
+		trashGIF = itemDrawing.gif 
+		width = itemDrawing.dimensions[0]
+		height = itemDrawing.dimensions[1]
 
-		x = randint(0+(width//2), 600-(width//2))
-		y = randint(-900+(height//2), 0-(height//2))
+		x = randint(0+(width//2), 600-(width//2)) #we make sure that the object generated is always on screen by taking into account the width of the object
+		y = randint(-900+(height//2), 0-(height//2)) #we make sure that the object generated is always on screen by taking into account the height of the object
 
-		trash.append(Trash(x, y, width, height, type, trashGIF))
+		trash.append(Trash(x, y, width, height, category, trashGIF)) #adds a trash object with our calculated values to our trash item list
 
 # draws each piece of trash to the screen
 def drawTrash():
 	global trashImage
-	trashImage = [0] * piecesOfTrash
-	for i in range(piecesOfTrash):
+	trashImage = [0] * piecesOfTrash #sets up each trash image to be assigned
+	for i in range(piecesOfTrash): #assign each trashImage according to trash object values
 		trashImage[i] = screen.create_image(trash[i].x, trash[i].y, anchor="center", image=trash[i].trashGIF)
 
 # deletes each piece of trash on the screen
@@ -135,9 +136,17 @@ def deleteTrash():
 	for i in range(piecesOfTrash):
 		screen.delete(trashImage[i])
 
+#calls update method of each trash object to update values
 def updateTrash():
 	for i in range(piecesOfTrash):
 		trash[i].update()
+
+def drawLoading():
+	loadingScreenGIF = screen.create_image()
+
+#draw in the background
+def drawTrashBins():
+	screen.create_image(300, 800, anchor="center", image=trashBinsGIF)
 
 # GETS CALLED CONSTANTLY FOR ANIMATION
 # draw all of our graphics
@@ -149,35 +158,37 @@ def updateStatistics():
 
 	scoreDisplay = screen.create_text(100, 36, text = scoreMessage, font = "Times 36", anchor=CENTER, fill="black")
 	livesDisplay = screen.create_text(500, 36, text = livesMessage, font = "Times 36", anchor=CENTER, fill="black")
+
 def drawObjects():
 	drawTrash()
 	updateStatistics()
-# delete our drawings
+
+# delete our drawings so they can be redrawn
 def deleteObjects():
 	deleteTrash()
-	#check if timers of x drawings is up
 	screen.delete(scoreDisplay)
 	screen.delete(livesDisplay)
-	for i in xDrawings:
-		if i.time == 0:
-			screen.delete(i.drawing[0])
-			screen.delete(i.drawing[1])
-			xDrawings.remove(i)
+	for i in xDrawings: #check if timers of x drawings is up
+		if i.time == 0: #if the timer is up
+			screen.delete(i.drawing[0]) #remove cross1 of the x from the screen
+			screen.delete(i.drawing[1]) #remove cross2 of the x from the screen
+			xDrawings.remove(i) #delete the xDrawing object
 
 def mouseInsideImage(xImage, yImage, width, height):
-	if xImage - width <= xMouse <= xImage + width and yImage - height <= yMouse <= yImage + height:
+	#detects if the x and y of the mouse is inside the image by also taking into account the height and width
+	if xImage - width <= xMouse <= xImage + width and yImage - height <= yMouse <= yImage + height: 
 		return True
 	else:
 		return False
 
 # update positions of all of our objects
 def updateObjects():
-	updateTrash()
-	for i in xDrawings:
+	updateTrash() 
+	for i in xDrawings: #updates the timer for each xDrawing
 		i.time -= 1
 
 # KEYBIND HANDLERS
-# gets called when mouse is clicked
+# gets called when user clicks mouse
 def mouseClickHandler(event):
 	global xMouse, yMouse, mouseDown, clickedItemNumber
 
@@ -185,12 +196,13 @@ def mouseClickHandler(event):
 	yMouse=event.y
 
 	mouseDown=True
-	for i in range(piecesOfTrash-1, -1, -1): #loop backwards through images so that image on top is clicked
+	#checks if you clicked on a trash item
+	for i in range(piecesOfTrash-1, -1, -1): #loop backwards through images so that image drawn on top is clicked if there is overlap
 		item = trash[i]
 		if mouseInsideImage(item.x, item.y, item.width, item.height) == True:
 			item.clicked = True
-			clickedItemNumber = i #records the index of our object so that we can set it's clicked value as false
-			break
+			clickedItemNumber = i #records the index of our object so that we can set it's clicked value as false later once it is dropped
+			break #make sure once we find one object that is valid to be clicked, we don't move another object as well
 
 # gets called when mouse is moving and checks if mouse is clicked
 def mouseMotionHandler(event):
@@ -199,7 +211,7 @@ def mouseMotionHandler(event):
 	xMouse=event.x
 	yMouse=event.y
 
-	if mouseDown == True and clickedItemNumber != 'None':
+	if mouseDown == True and clickedItemNumber != 'None': #let the trash follow the mouse if there is a valid clicked item as well as if the mouse is clicked
 		trash[clickedItemNumber].x = xMouse
 		trash[clickedItemNumber].y = yMouse
 		
@@ -213,12 +225,12 @@ def mouseReleaseHandler(event):
 	yMouse=event.y
 
 	#checks if trash is placed in the right bin
-	if trash[clickedItemNumber].y+(trash[clickedItemNumber].height//2) > 700:
-		typeIndex = trashType.index(trash[clickedItemNumber].type)
-		if trashBinRegions[typeIndex][0] <= trash[clickedItemNumber].x and trash[clickedItemNumber].x <= trashBinRegions[typeIndex][1]:
+	if trash[clickedItemNumber].y+(trash[clickedItemNumber].height//2) > 700: #makes sure the bottom of the image is on the garbage bins
+		categoryIndex = trashCategory.index(trash[clickedItemNumber].category) #gives us the index of the category of the trash in the trashCategory array so we can access the correct information
+		if trashBinRegions[categoryIndex][0] <= trash[clickedItemNumber].x and trash[clickedItemNumber].x <= trashBinRegions[categoryIndex][1]: #detects if the x of the image is in the correct area when dropped, thus giving you a point
 			score = score + 1
 			trash[clickedItemNumber].reset()
-		else: 
+		else: #if you didn't drop the trash in the right bin
 			lives = lives - 1
 
 			trash[clickedItemNumber].lostLife()
@@ -226,24 +238,25 @@ def mouseReleaseHandler(event):
 
 	trash[clickedItemNumber].clicked = False
 	clickedItemNumber = 'None'
+
 # gets called when key is pressed
 def keyDownHandler(event):
 	global escPressed
-	if event.keysym == "Escape":  # end game if esc is pressed
-		escPressed=True
-
-
-
+	if event.keysym == "Escape":  #end game if esc is pressed
+		root.destroy()
 
 def stopGame():
-	root.destroy()
+	screen.create_image()
 
 def runGame():
+	drawLoading()
 	setInitialValues()
 	createTrash()
 	drawTrashBins()
-
-	while escPressed == False:
+	screen.delete(loadingScreenGIF)
+	sleep(1)
+	
+	while escPressed == False and lives > 0:
 		drawObjects()
 		screen.update()
 		sleep(0.03)
@@ -251,7 +264,9 @@ def runGame():
 		deleteObjects()
 		updateObjects()
 	stopGame()
-	print(score)
+
+	sleep(1)
+
 
 # At the bottom
 root.after(0, runGame)
