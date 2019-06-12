@@ -66,9 +66,9 @@ class xDrawing:
 # set our global variables
 def setInitialValues():
 	global score, lives, piecesOfTrash, ySpeed, trashCategory
-	global xMouse, yMouse, mouseDown, escPressed, clickedItemNumber
+	global xMouse, yMouse, mouseDown, escPressed, clickedItemNumber, hoveredBin
 	global paperItemGIF, organicItemGIF, glassItemGIF, plasticItemGIF, allTrashItemGIFS, recycleLogoGIF
-	global paperBinDrawing, organicBinDrawing, glassBinDrawing, plasticBinDrawing, xDrawings
+	global paperBinDrawing, organicBinDrawing, glassBinDrawing, plasticBinDrawing, trashBinDrawings, xDrawings
 	global introScreenGIF, instructionsScreenGIF, difficultyScreenGIF, loadingScreenGIF, gameOverScreenGIF
 	global trashItemDimensions, trashBinRegions
 
@@ -81,7 +81,8 @@ def setInitialValues():
 	mouseDown = False
 	escPressed = False
 	clickedItemNumber = 'None' #index used to identify which trash object is clicked(will be None when there aren't any)
-	
+	hoveredBin = 'None' #identify which garbage bin is hovered on by the mouse when holding an item
+
 	#arrays of trash item gifs in their respective category
 	paperItemGIF = [PhotoImage(file="imgs/paper/paper1.gif"), PhotoImage(file="imgs/paper/paper2.gif"), PhotoImage(file="imgs/paper/paper3.gif")]
 	organicItemGIF = [PhotoImage(file="imgs/organic/organic1.gif"), PhotoImage(file="imgs/organic/organic2.gif"), PhotoImage(file="imgs/organic/organic3.gif"), PhotoImage(file="imgs/organic/organic4.gif")]
@@ -97,6 +98,7 @@ def setInitialValues():
 	organicBinDrawing = []
 	glassBinDrawing = []
 	plasticBinDrawing = []
+	trashBinDrawings = []
 
 	xDrawings = [] #array of all drawings of X's that indicate a lost life
 	
@@ -151,6 +153,7 @@ def updateTrash():
 #draw in the background
 def drawTrashBins():
 	global paperBinDrawing, organicBinDrawing, glassBinDrawing, plasticBinDrawing
+	global trashBinDrawings
 
 	#paper bin
 	startX = 80
@@ -160,42 +163,43 @@ def drawTrashBins():
 	lid = screen.create_polygon(10, 740, 150, 740, 140, 730, 20, 730, fill="yellow", outline="black")
 	label = screen.create_text(80, 850, text="PAPER", font = "Roboto 16", anchor=CENTER, fill="white")
 	logo = screen.create_image(80, 800, anchor="center", image=recycleLogoGIF)
-	lidOpen = screen.create_polygon(10, 740, 10, 600, 0, 610, 0, 720, fill="yellow", outline="black")
-	paperBinDrawing = [wheel1, wheel2, body, lid, label, logo, lidOpen, paperBinDrawing]
+	#lidOpen = screen.create_polygon(10, 740, 10, 600, 0, 610, 0, 720, fill="yellow", outline="black")
+	paperBinDrawing = [wheel1, wheel2, body, lid, label, logo, paperBinDrawing]
 
 	#organic bin
 	startX = 230
-	wheel1 = screen.create_rectangle(167, 885, startX-47, 905, fill="black")
-	wheel2 = screen.create_rectangle(startX+47, 885, startX+63, 905, fill="black")
-	body = screen.create_polygon(startX-70, 740, startX+70, 740, startX+55, 900, startX-55, 900, fill="green", outline="black")
-	lid = screen.create_polygon(startX-70, 740, startX+70, 740, startX+60, 730, startX-60, 730, fill="green", outline="black")
-	label = screen.create_text(startX, 850, text="ORGANIC", font = "Roboto 16", anchor=CENTER, fill="white")
-	logo = screen.create_image(startX, 800, anchor="center", image=recycleLogoGIF)
-	lidOpen = screen.create_polygon(startX-70, 740, startX-70, 600, startX-80, 610, startX-80, 720, fill="green", outline="black")
-	paperBinDrawing = [wheel1, wheel2, body, lid, label, logo, lidOpen, paperBinDrawing]	
+	wheel1 = screen.create_rectangle(167, 885, 183, 905, fill="black")
+	wheel2 = screen.create_rectangle(277, 885, 293, 905, fill="black")
+	body = screen.create_polygon(160, 740, 300, 740, 285, 900, 175, 900, fill="green", outline="black")
+	lid = screen.create_polygon(160, 740, 300, 740, 290, 730, 170, 730, fill="green", outline="black")
+	label = screen.create_text(230, 850, text="ORGANIC", font = "Roboto 16", anchor=CENTER, fill="white")
+	logo = screen.create_image(230, 800, anchor="center", image=recycleLogoGIF)
+	#lidOpen = screen.create_polygon(160, 740, 160, 600, 150, 610, 150, 720, fill="green", outline="black")
+	organicBinDrawing = [wheel1, wheel2, body, lid, label, logo, paperBinDrawing]	
 
 	#glass bin
 	startX = 380
-	wheel1 = screen.create_rectangle(startX-63, 885, startX-47, 905, fill="black")
-	wheel2 = screen.create_rectangle(startX+47, 885, startX+63, 905, fill="black")
-	body = screen.create_polygon(startX-70, 740, startX+70, 740, startX+55, 900, startX-55, 900, fill="blue", outline="black")
-	lid = screen.create_polygon(startX-70, 740, startX+70, 740, startX+60, 730, startX-60, 730, fill="blue", outline="black")
-	label = screen.create_text(startX, 850, text="GLASS", font = "Roboto 16", anchor=CENTER, fill="white")
-	logo = screen.create_image(startX, 800, anchor="center", image=recycleLogoGIF)
-	lidOpen = screen.create_polygon(startX-70, 740, startX-70, 600, startX-80, 610, startX-80, 720, fill="blue", outline="black")
-	paperBinDrawing = [wheel1, wheel2, body, lid, label, logo, lidOpen, paperBinDrawing]
+	wheel1 = screen.create_rectangle(317, 885, 333, 905, fill="black")
+	wheel2 = screen.create_rectangle(427, 885, 443, 905, fill="black")
+	body = screen.create_polygon(310, 740, 450, 740, 435, 900, 325, 900, fill="blue", outline="black")
+	lid = screen.create_polygon(310, 740, 450, 740, 440, 730, 320, 730, fill="blue", outline="black")
+	label = screen.create_text(380, 850, text="GLASS", font = "Roboto 16", anchor=CENTER, fill="white")
+	logo = screen.create_image(380, 800, anchor="center", image=recycleLogoGIF)
+	#lidOpen = screen.create_polygon(310, 740, 310, 600, 300, 610, 300, 720, fill="blue", outline="black")
+	glassBinDrawing = [wheel1, wheel2, body, lid, label, logo, paperBinDrawing]
 
-	
 	#plastic bin
 	startX = 530
-	wheel1 = screen.create_rectangle(startX-63, 885, startX-47, 905, fill="black")
-	wheel2 = screen.create_rectangle(startX+47, 885, startX+63, 905, fill="black")
-	body = screen.create_polygon(startX-70, 740, startX+70, 740, startX+55, 900, startX-55, 900, fill="red", outline="black")
-	lid = screen.create_polygon(startX-70, 740, startX+70, 740, startX+60, 730, startX-60, 730, fill="red", outline="black")
+	wheel1 = screen.create_rectangle(467, 885, 483, 905, fill="black")
+	wheel2 = screen.create_rectangle(577, 885, 593, 905, fill="black")
+	body = screen.create_polygon(460, 740, 600, 740, 585, 900, 475, 900, fill="red", outline="black")
+	lid = screen.create_polygon(460, 740, 600, 740, 590, 730, 470, 730, fill="red", outline="black")
 	label = screen.create_text(startX, 850, text="PLASTIC", font = "Roboto 16", anchor=CENTER, fill="white")
 	logo = screen.create_image(startX, 800, anchor="center", image=recycleLogoGIF)
-	lidOpen = screen.create_polygon(startX-70, 740, startX-70, 600, startX-80, 610, startX-80, 720, fill="red", outline="black")
-	paperBinDrawing = [wheel1, wheel2, body, lid, label, logo, lidOpen, paperBinDrawing]
+	#lidOpen = screen.create_polygon(460, 740, 460, 600, 450, 610, 450, 720, fill="red", outline="black")
+	plasticBinDrawing = [wheel1, wheel2, body, lid, label, logo, paperBinDrawing]
+
+	trashBinDrawings = [paperBinDrawing, organicBinDrawing, glassBinDrawing, plasticBinDrawing]
 
 # GETS CALLED CONSTANTLY FOR ANIMATION
 # draw all of our graphics
@@ -240,6 +244,10 @@ def updateObjects():
 #def drawLoading():
 #	loadingScreenGIF = screen.create_image()
 
+def drawGameOver():
+	scoreDisplay = screen.create_text()
+	
+
 # KEYBIND HANDLERS
 # gets called when user clicks mouse
 def mouseClickHandler(event):
@@ -259,7 +267,7 @@ def mouseClickHandler(event):
 
 # gets called when mouse is moving and checks if mouse is clicked
 def mouseMotionHandler(event):
-	global xMouse, yMouse, mouseDown, clickedItemNumber
+	global xMouse, yMouse, mouseDown, clickedItemNumber, hoveredBin
 
 	xMouse=event.x
 	yMouse=event.y
@@ -267,7 +275,12 @@ def mouseMotionHandler(event):
 	if mouseDown == True and clickedItemNumber != 'None': #let the trash follow the mouse if there is a valid clicked item as well as if the mouse is clicked
 		trash[clickedItemNumber].x = xMouse
 		trash[clickedItemNumber].y = yMouse
-		
+
+		#if yMouse+(trash[clickedItemNumber].height//2) > 700:#animate opened lid when hovering over trash bin
+		#	for i in range(len(trashBinRegions)-1):
+		#		if trashBinRegions[i][0] <= yMouse and trashBinRegions[i][1] >= yMouse:
+		#			hoveredBin = i
+
 # gets called when mouse is released
 def mouseReleaseHandler(event):
 	global xMouse, yMouse, mouseDown, clickedItemNumber, lives, score, trash
