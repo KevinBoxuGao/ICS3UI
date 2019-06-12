@@ -67,8 +67,8 @@ class xDrawing:
 def setInitialValues():
 	global score, lives, piecesOfTrash, ySpeed, trashCategory
 	global xMouse, yMouse, mouseDown, escPressed, clickedItemNumber
-	global glassItemGIF, organicItemGIF, paperItemGIF, plasticItemGIF, allTrashItemGIFS, trashBinsGIF
-	global xDrawings 
+	global paperItemGIF, organicItemGIF, glassItemGIF, plasticItemGIF, allTrashItemGIFS, recycleLogoGIF
+	global paperBinDrawing, organicBinDrawing, glassBinDrawing, plasticBinDrawing, xDrawings
 	global introScreenGIF, instructionsScreenGIF, difficultyScreenGIF, loadingScreenGIF, gameOverScreenGIF
 	global trashItemDimensions, trashBinRegions
 
@@ -90,16 +90,23 @@ def setInitialValues():
 	#collection of all trash item images
 	allTrashItemGIFS = [paperItemGIF, organicItemGIF, glassItemGIF, plasticItemGIF]
 
-	trashBinsGIF = PhotoImage(file = "imgs/trash bins.gif")
+	recycleLogoGIF = PhotoImage(file="imgs/recycling logo.gif")
+
+	#have arrays that stores all of the drawings of the recycling bin
+	paperBinDrawing = []
+	organicBinDrawing = []
+	glassBinDrawing = []
+	plasticBinDrawing = []
 
 	xDrawings = [] #array of all drawings of X's that indicate a lost life
 	
+	trashBinGIF = PhotoImage(file="imgs/trash bins.gif")
 	#images for game screens
-	introScreenGIF = PhotoImage(file="")
-	instructionsScreenGIF = PhotoImage(file="")
-	difficultyScreenGIF = PhotoImage(file="")
-	loadingScreenGIF = PhotoImage(file="")
-	gameOverScreenGIF = PhotoImage(file="")
+	#introScreenGIF = PhotoImage(file="")
+	#instructionsScreenGIF = PhotoImage(file="")
+	#difficultyScreenGIF = PhotoImage(file="")
+	#loadingScreenGIF = PhotoImage(file="")
+	#gameOverScreenGIF = PhotoImage(file="")
 
 	#multi-dimensional array that stores the fixed sizes of the gifs, has heirarchy of [category of item][item number][dimensions for each item]
 	trashItemDimensions = [[[80,60],[111,71],[106,76]], [[57,74],[47,46],[46,58],[66,62]], [[29,82],[23,76],[23,81],[22,44]], [[28,80],[52,64],[60,79],[39,39]]]
@@ -141,12 +148,54 @@ def updateTrash():
 	for i in range(piecesOfTrash):
 		trash[i].update()
 
-def drawLoading():
-	loadingScreenGIF = screen.create_image()
-
 #draw in the background
 def drawTrashBins():
-	screen.create_image(300, 800, anchor="center", image=trashBinsGIF)
+	global paperBinDrawing, organicBinDrawing, glassBinDrawing, plasticBinDrawing
+
+	#paper bin
+	startX = 80
+	wheel1 = screen.create_rectangle(17, 885, 33, 905, fill="black")
+	wheel2 = screen.create_rectangle(127, 885, 143, 905, fill="black")
+	body = screen.create_polygon(10, 740, 150, 740, 135, 900, 25, 900, fill="yellow", outline="black")
+	lid = screen.create_polygon(10, 740, 150, 740, 140, 730, 20, 730, fill="yellow", outline="black")
+	label = screen.create_text(80, 850, text="PAPER", font = "Roboto 16", anchor=CENTER, fill="white")
+	logo = screen.create_image(80, 800, anchor="center", image=recycleLogoGIF)
+	lidOpen = screen.create_polygon(10, 740, 10, 600, 0, 610, 0, 720, fill="yellow", outline="black")
+	paperBinDrawing = [wheel1, wheel2, body, lid, label, logo, lidOpen, paperBinDrawing]
+
+	#organic bin
+	startX = 230
+	wheel1 = screen.create_rectangle(167, 885, startX-47, 905, fill="black")
+	wheel2 = screen.create_rectangle(startX+47, 885, startX+63, 905, fill="black")
+	body = screen.create_polygon(startX-70, 740, startX+70, 740, startX+55, 900, startX-55, 900, fill="green", outline="black")
+	lid = screen.create_polygon(startX-70, 740, startX+70, 740, startX+60, 730, startX-60, 730, fill="green", outline="black")
+	label = screen.create_text(startX, 850, text="ORGANIC", font = "Roboto 16", anchor=CENTER, fill="white")
+	logo = screen.create_image(startX, 800, anchor="center", image=recycleLogoGIF)
+	lidOpen = screen.create_polygon(startX-70, 740, startX-70, 600, startX-80, 610, startX-80, 720, fill="green", outline="black")
+	paperBinDrawing = [wheel1, wheel2, body, lid, label, logo, lidOpen, paperBinDrawing]	
+
+	#glass bin
+	startX = 380
+	wheel1 = screen.create_rectangle(startX-63, 885, startX-47, 905, fill="black")
+	wheel2 = screen.create_rectangle(startX+47, 885, startX+63, 905, fill="black")
+	body = screen.create_polygon(startX-70, 740, startX+70, 740, startX+55, 900, startX-55, 900, fill="blue", outline="black")
+	lid = screen.create_polygon(startX-70, 740, startX+70, 740, startX+60, 730, startX-60, 730, fill="blue", outline="black")
+	label = screen.create_text(startX, 850, text="GLASS", font = "Roboto 16", anchor=CENTER, fill="white")
+	logo = screen.create_image(startX, 800, anchor="center", image=recycleLogoGIF)
+	lidOpen = screen.create_polygon(startX-70, 740, startX-70, 600, startX-80, 610, startX-80, 720, fill="blue", outline="black")
+	paperBinDrawing = [wheel1, wheel2, body, lid, label, logo, lidOpen, paperBinDrawing]
+
+	
+	#plastic bin
+	startX = 530
+	wheel1 = screen.create_rectangle(startX-63, 885, startX-47, 905, fill="black")
+	wheel2 = screen.create_rectangle(startX+47, 885, startX+63, 905, fill="black")
+	body = screen.create_polygon(startX-70, 740, startX+70, 740, startX+55, 900, startX-55, 900, fill="red", outline="black")
+	lid = screen.create_polygon(startX-70, 740, startX+70, 740, startX+60, 730, startX-60, 730, fill="red", outline="black")
+	label = screen.create_text(startX, 850, text="PLASTIC", font = "Roboto 16", anchor=CENTER, fill="white")
+	logo = screen.create_image(startX, 800, anchor="center", image=recycleLogoGIF)
+	lidOpen = screen.create_polygon(startX-70, 740, startX-70, 600, startX-80, 610, startX-80, 720, fill="red", outline="black")
+	paperBinDrawing = [wheel1, wheel2, body, lid, label, logo, lidOpen, paperBinDrawing]
 
 # GETS CALLED CONSTANTLY FOR ANIMATION
 # draw all of our graphics
@@ -181,11 +230,15 @@ def mouseInsideImage(xImage, yImage, width, height):
 	else:
 		return False
 
-# update positions of all of our objects
+#update positions of all of our objects
 def updateObjects():
 	updateTrash() 
 	for i in xDrawings: #updates the timer for each xDrawing
 		i.time -= 1
+
+#Functions for drawing different screens
+#def drawLoading():
+#	loadingScreenGIF = screen.create_image()
 
 # KEYBIND HANDLERS
 # gets called when user clicks mouse
@@ -206,7 +259,7 @@ def mouseClickHandler(event):
 
 # gets called when mouse is moving and checks if mouse is clicked
 def mouseMotionHandler(event):
-	global xMouse, yMouse, clickedItemNumber
+	global xMouse, yMouse, mouseDown, clickedItemNumber
 
 	xMouse=event.x
 	yMouse=event.y
@@ -243,20 +296,20 @@ def mouseReleaseHandler(event):
 def keyDownHandler(event):
 	global escPressed
 	if event.keysym == "Escape":  #end game if esc is pressed
-		root.destroy()
+		escPressed = True
 
 def stopGame():
-	screen.create_image()
+	root.destroy()
 
 def runGame():
-	drawLoading()
+	#drawLoading()
 	setInitialValues()
 	createTrash()
 	drawTrashBins()
-	screen.delete(loadingScreenGIF)
+	#screen.delete(loadingScreenGIF)
 	sleep(1)
 	
-	while escPressed == False and lives > 0:
+	while escPressed == False:
 		drawObjects()
 		screen.update()
 		sleep(0.03)
@@ -264,7 +317,6 @@ def runGame():
 		deleteObjects()
 		updateObjects()
 	stopGame()
-
 	sleep(1)
 
 
