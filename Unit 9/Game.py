@@ -4,7 +4,7 @@ from time import *
 from random import *
 
 root = Tk()
-screen = Canvas(root, width=600, height=900, background="white")
+screen = Canvas(root, width=600, height=900, background="#e6e6e6")
 
 #object model for a piece of trash
 class Trash:
@@ -101,8 +101,7 @@ def setInitialValues():
 	trashBinDrawings = []
 
 	xDrawings = [] #array of all drawings of X's that indicate a lost life
-	
-	trashBinGIF = PhotoImage(file="imgs/trash bins.gif")
+
 	#images for game screens
 	#introScreenGIF = PhotoImage(file="")
 	#instructionsScreenGIF = PhotoImage(file="")
