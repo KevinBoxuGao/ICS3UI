@@ -9,7 +9,7 @@ screen = Canvas(root, width=600, height=900, background="#e6e6e6")
 #====== Data Models For Objects ======#
 # object for a piece of trash item
 class Trash:
-    # set trash object variables on initialization
+    #set trash object variables on initialization
     def __init__(self, x, y, width, height, category, trashGIF):
         self.x = x
         self.y = y
@@ -22,11 +22,11 @@ class Trash:
         self.clicked = False
 
 
-    def reset(self):  # Method, reset trash object variables, giving the illusion that a new trash item is created
-        self.category = choice(trashCategory)  #chooses random trash category
+    def reset(self): #Method, reset trash object variables, giving the illusion that a new trash item is created
+        self.category = choice(trashCategory) #chooses random trash category
         categoryIndex = trashCategory.index(self.category)
         self.trashGIF = choice(allTrashItemGIFS[categoryIndex])
-        # creates temporary object to store values of gif
+        #creates temporary object to store values of gif
         item = trashItemGIF(self.category)
         self.trashGIF = item.gif
         self.width = item.dimensions[0]
@@ -35,17 +35,17 @@ class Trash:
         self.y = randint(-900+(self.height//2), 0-(self.height//2))
 
 
-    def lostLife(self):  # Method, add an xDrawing at the location of the trash item, indicating a lost life
+    def lostLife(self): #Method, add an xDrawing at the location of the trash item, indicating a lost life
         global lives
         lives = lives - 1
-        # add xDrawing in place of trash that wasn't placed in the correct bin in time
+        #add xDrawing in place of trash that wasn't placed in the correct bin in time
         xDrawings.append(xDrawing(self.x, self.y))
 
 
-    def update(self):  # Method, set object location
+    def update(self): #Method, set object location
         if self.clicked == False:
-            self.y = self.y + ySpeed  # increases position of trash
-            # checks if piece of trash has exceeded limit and is not clicked on
+            self.y = self.y + ySpeed  #increases position of trash
+            #checks if piece of trash has exceeded limit and is not clicked on
             if self.y+(self.height//2) > 900:
                 self.lostLife()
                 self.reset()
@@ -54,17 +54,17 @@ class Trash:
 class trashItemGIF:
     def __init__(self, category):
         self.category = category
-        # gets the index of the category so that we can access the correct array of gifs
+        #gets the index of the category so that we can access the correct array of gifs
         categoryIndex = trashCategory.index(category)
         self.gif = choice(allTrashItemGIFS[categoryIndex])
-        # gets the index for the specific trash item in the category array so that we can access it's dimensions
+        #gets the index for the specific trash item in the category array so that we can access it's dimensions
         trashGIFIndex = allTrashItemGIFS[categoryIndex].index(self.gif)
         self.dimensions = trashItemDimensions[categoryIndex][trashGIFIndex]
 
 # object for X drawing
 class xDrawing:
     def __init__(self, x, y):
-        width = 10
+        width = 14
         cross1 = screen.create_line(x+width, y+width, x-width, y-width, width="3", fill="red")
         cross2 = screen.create_line(x+width, y-width, x-width, y+width, width="3", fill="red")
 
@@ -79,17 +79,17 @@ def importImages():
     #constants that aren't images but are details about them 
     global trashCategory, trashItemDimensions, trashBinRegions
 
-    # arrays of trash item gifs in their respective category
+    #arrays of trash item gifs in their respective category
     paperItemGIF = [PhotoImage(file="imgs/paper/paper1.gif"), PhotoImage(file="imgs/paper/paper2.gif"), PhotoImage(file="imgs/paper/paper3.gif")]
     organicItemGIF = [PhotoImage(file="imgs/organic/organic1.gif"), PhotoImage(file="imgs/organic/organic2.gif"), PhotoImage(file="imgs/organic/organic3.gif")]
     glassItemGIF = [PhotoImage(file="imgs/glass/glass1.gif"), PhotoImage(file="imgs/glass/glass2.gif"), PhotoImage(file="imgs/glass/glass3.gif")]
     plasticItemGIF = [PhotoImage(file="imgs/plastic/plastic1.gif"), PhotoImage(file="imgs/plastic/plastic2.gif"), PhotoImage(file="imgs/plastic/plastic3.gif")]
-    # collection of all trash item images
+    #collection of all trash item images
     allTrashItemGIFS = [paperItemGIF, organicItemGIF, glassItemGIF, plasticItemGIF]
 
     recycleLogoGIF = PhotoImage(file="imgs/recycling logo.gif")
 
-    # images for game screens
+    #images for game screens
     introScreenGIF = PhotoImage(file="imgs/gameScreens/intro.gif")
     instructionsScreenGIF = PhotoImage(file="imgs/gameScreens/instructions.gif")
     difficultyScreenGIF = PhotoImage(file="imgs/gameScreens/difficulty.gif")
@@ -228,6 +228,7 @@ def drawTrashBins():
     trashBinLids = [paperBinLid, organicBinLid, glassBinLid, plasticBinLid]
 
 
+#draw out our statistics in the two corners
 def updateStatistics():
     global scoreDisplay, livesDisplay
     scoreMessage = "Score: " + str(score)
@@ -235,6 +236,7 @@ def updateStatistics():
 
     scoreDisplay = screen.create_text(100, 36, text=scoreMessage, font="Times 36", anchor=CENTER, fill="black")
     livesDisplay = screen.create_text(500, 36, text=livesMessage, font="Times 36", anchor=CENTER, fill="black")
+
 
 #====== Functions Called For Our Animation Loop ======#
 #draw all of our graphics
@@ -263,8 +265,9 @@ def updateObjects():
     for i in xDrawings:  #updates the timer for each xDrawing
         i.time -= 1
 
+
 #====== KeyBind Handlers======#
-# gets called when user clicks mouse
+#gets called when user clicks mouse
 def mouseClickHandler(event):
     global xMouse, yMouse, mouseDown, gameMode, clickedItemNumber
 
@@ -336,7 +339,7 @@ def mouseClickHandler(event):
             screen.delete(gameOverScreen[0])
 
 
-# gets called when mouse is moving and checks if mouse is clicked
+#gets called when mouse is moving and checks if mouse is clicked
 def mouseMotionHandler(event):
     global xMouse, yMouse, mouseDown, hoveredBin
 
@@ -346,7 +349,7 @@ def mouseMotionHandler(event):
     yMouse = event.y
 
     if gameMode == "play":
-        # let the trash follow the mouse if there is a valid clicked item as well as if the mouse is clicked
+        #let the trash follow the mouse if there is a valid clicked item as well as if the mouse is clicked
         if mouseDown == True and clickedItemNumber != 'None': 
             #makes it so clicked item is following mouse
             trashItems[clickedItemNumber].x = xMouse
@@ -412,7 +415,7 @@ def mouseMotionHandler(event):
                     trashBinLids[hoveredBin] = screen.create_polygon(460, 740, 600, 740, 590, 730, 470, 730, fill="#CC0000", outline="black")
                 hoveredBin = 'None'     
     
-# gets called when mouse is released
+#gets called when mouse is released
 def mouseReleaseHandler(event):
     global xMouse, yMouse, clickedItemNumber, score
 
@@ -422,11 +425,11 @@ def mouseReleaseHandler(event):
     yMouse = event.y
 
     if gameMode == "play":
-        # checks if trash is placed in the right bin
+        #checks if trash is placed in the right bin
         if trashItems[clickedItemNumber].y+(trashItems[clickedItemNumber].height//2) > 700: # makes sure the bottom of the image is on the garbage bins
-            # gives us the index of the category of the trash in the trashCategory array so we can access the correct information
+            #gives us the index of the category of the trash in the trashCategory array so we can access the correct information
             categoryIndex = trashCategory.index(trashItems[clickedItemNumber].category)
-            # detects if the x of the image is in the correct area when dropped, thus giving you a point
+            #detects if the x of the image is in the correct area when dropped, thus giving you a point
             if trashBinRegions[categoryIndex][0] <= trashItems[clickedItemNumber].x and trashItems[clickedItemNumber].x <= trashBinRegions[categoryIndex][1]:
                 score = score + 1
                 trashItems[clickedItemNumber].reset()
@@ -458,9 +461,9 @@ def keyDownHandler(event):
             escPressed = True
 
 
-# helper function to help mouseClickHandler if it is clicking on an image 
+#helper function to help mouseClickHandler if it is clicking on an image 
 def mouseInsideImage(xImage, yImage, width, height):
-    # detects if the x and y of the mouse is inside the image by also taking into account the height and width
+    #detects if the x and y of the mouse is inside the image by also taking into account the height and width
     if xImage - width <= xMouse <= xImage + width and yImage - height <= yMouse <= yImage + height:
         return True
     else:
