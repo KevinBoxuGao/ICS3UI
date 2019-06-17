@@ -7,7 +7,7 @@ screen = Canvas(root, width=600, height=900, background="#e6e6e6")
 
 
 #====== Data Models For Objects ======#
-# object for a piece of trash item
+#object for a piece of trash item
 class Trash:
     #set trash object variables on initialization
     def __init__(self, x, y, width, height, category, trashGIF):
@@ -42,6 +42,13 @@ class Trash:
         xDrawings.append(xDrawing(self.x, self.y))
 
 
+    def gainScore(self): #Method, add an xDrawing at the location of the trash item, indicating a lost life
+        global score
+        score = score + 1
+        #add checkmark in place of trash that was placed in the correct bin in time
+        checkMarkDrawings.append(checkMarkDrawing(self.x, self.y))
+
+
     def update(self): #Method, set object location
         if self.clicked == False:
             self.y = self.y + ySpeed  #increases position of trash
@@ -71,6 +78,14 @@ class xDrawing:
         self.drawing = [cross1, cross2]
         self.time = 20  # time for how many frames the image will appear for
 
+class checkMarkDrawing:
+    def __init__(self, x, y):
+        width = 14
+        cross1 = screen.create_line(x-width,y+width, x-21, y+7, width="3", fill="green")
+        cross2 = screen.create_line(x+width, y-width, x-width, y+width, width="3", fill="green")
+
+        self.drawing = [cross1, cross2]
+        self.time = 20
 
 #====== Setting Up Values ======#
 def importImages():
@@ -80,21 +95,21 @@ def importImages():
     global trashCategory, trashItemDimensions, trashBinRegions
 
     #arrays of trash item gifs in their respective category
-    paperItemGIF = [PhotoImage(file="imgs/paper/paper1.gif"), PhotoImage(file="imgs/paper/paper2.gif"), PhotoImage(file="imgs/paper/paper3.gif")]
-    organicItemGIF = [PhotoImage(file="imgs/organic/organic1.gif"), PhotoImage(file="imgs/organic/organic2.gif"), PhotoImage(file="imgs/organic/organic3.gif")]
-    glassItemGIF = [PhotoImage(file="imgs/glass/glass1.gif"), PhotoImage(file="imgs/glass/glass2.gif"), PhotoImage(file="imgs/glass/glass3.gif")]
-    plasticItemGIF = [PhotoImage(file="imgs/plastic/plastic1.gif"), PhotoImage(file="imgs/plastic/plastic2.gif"), PhotoImage(file="imgs/plastic/plastic3.gif")]
+    paperItemGIF = [PhotoImage(file="paper1.gif"), PhotoImage(file="paper2.gif"), PhotoImage(file="paper3.gif")]
+    organicItemGIF = [PhotoImage(file="organic1.gif"), PhotoImage(file="organic2.gif"), PhotoImage(file="organic3.gif")]
+    glassItemGIF = [PhotoImage(file="glass1.gif"), PhotoImage(file="glass2.gif"), PhotoImage(file="glass3.gif")]
+    plasticItemGIF = [PhotoImage(file="plastic1.gif"), PhotoImage(file="plastic2.gif"), PhotoImage(file="plastic3.gif")]
     #collection of all trash item images
     allTrashItemGIFS = [paperItemGIF, organicItemGIF, glassItemGIF, plasticItemGIF]
 
-    recycleLogoGIF = PhotoImage(file="imgs/recycling logo.gif")
+    recycleLogoGIF = PhotoImage(file="recycling logo.gif")
 
     #images for game screens
-    introScreenGIF = PhotoImage(file="imgs/gameScreens/intro.gif")
-    instructionsScreenGIF = PhotoImage(file="imgs/gameScreens/instructions.gif")
-    difficultyScreenGIF = PhotoImage(file="imgs/gameScreens/difficulty.gif")
-    loadingScreenGIF = PhotoImage(file="imgs/gameScreens/loading.gif")
-    gameOverScreenGIF = PhotoImage(file="imgs/gameScreens/gameOver.gif")
+    introScreenGIF = PhotoImage(file="intro.gif")
+    instructionsScreenGIF = PhotoImage(file="instructions.gif")
+    difficultyScreenGIF = PhotoImage(file="difficulty.gif")
+    loadingScreenGIF = PhotoImage(file="loading.gif")
+    gameOverScreenGIF = PhotoImage(file="gameOver.gif")
 
     # list containing all possible categorys of trash
     trashCategory = ['paper', 'organic', 'glass', 'plastic']
@@ -107,7 +122,7 @@ def importImages():
 def setInitialValues():
     global score, lives, piecesOfTrash, ySpeed, difficulty
     global clickedItemNumber, hoveredBin, escPressed
-    global xDrawings, lidOpen
+    global xDrawings, checkMarkDrawings, lidOpen
     global trashItems, trashImage 
 
     score = 0
@@ -130,6 +145,7 @@ def setInitialValues():
     hoveredBin = 'None'
     escPressed = False
 
+    checkMarkDrawings = [] #array of all drawings of check marks that indicate a correctly placed trash item
     xDrawings = []  #array of all drawings of X's that indicate a lost life
     lidOpen = 0 #our drawing for the open lid of a hovered recycling bin
 
@@ -257,14 +273,17 @@ def deleteObjects():
             # remove cross2 of the x from the screen
             screen.delete(i.drawing[1])
             xDrawings.remove(i)  # delete the xDrawing object
-
-
+    for i in checkMarkDrawings:
+        if i.time == 0:
+            screen.delete(i.drawing[0])
+            screen.delete(i.drawing[1])
 #update positions of all of our objects
 def updateObjects():
     updateTrash()
     for i in xDrawings:  #updates the timer for each xDrawing
         i.time -= 1
-
+    for i in checkMarkDrawings:
+        i.time -= 1
 
 #====== KeyBind Handlers======#
 #gets called when user clicks mouse
@@ -431,7 +450,7 @@ def mouseReleaseHandler(event):
             categoryIndex = trashCategory.index(trashItems[clickedItemNumber].category)
             #detects if the x of the image is in the correct area when dropped, thus giving you a point
             if trashBinRegions[categoryIndex][0] <= trashItems[clickedItemNumber].x and trashItems[clickedItemNumber].x <= trashBinRegions[categoryIndex][1]:
-                score = score + 1
+                trashItems[clickedItemNumber].gainScore()
                 trashItems[clickedItemNumber].reset()
             else: #if you didn't drop the trash in the right bin
                 trashItems[clickedItemNumber].lostLife() #decrease life counter as well as draw x indicating lose life
