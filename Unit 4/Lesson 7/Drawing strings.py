@@ -27,3 +27,4 @@ for i in range(n):
     secondPoint = (i+gap)%n
     screen.create_line(points[i][0], points[i][1], points[secondPoint][0], points[secondPoint][1], fill="white")
 
+screen.mainloop()
